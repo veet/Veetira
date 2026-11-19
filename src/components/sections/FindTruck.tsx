@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, MOTION_OK } from "@/lib/motion";
 import type { SiteContent } from "@/lib/content/types";
-import { blockFontStyle } from "@/lib/content/fonts";
+import { blockTypeProps } from "@/lib/content/fonts";
 import { DAY_SHORT, formatRange, getStatus, useNow } from "@/lib/time";
 import { richLines } from "@/components/ui/Rich";
 import SplitReveal from "@/components/ui/SplitReveal";
@@ -55,7 +55,7 @@ export default function FindTruck({ content }: { content: SiteContent["findTruck
   );
 
   return (
-    <section ref={root} id="find-us" style={blockFontStyle(content)} className="bg-cream py-28 font-sans text-ink sm:py-40">
+    <section ref={root} id="find-us" {...blockTypeProps(content)} className="bg-cream py-28 font-sans text-ink sm:py-40">
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
         <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
           <div>

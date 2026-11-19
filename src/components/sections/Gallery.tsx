@@ -6,7 +6,7 @@ import { foodArt } from "@/components/art/Food";
 import SplitReveal from "@/components/ui/SplitReveal";
 
 import type { SiteContent, TileColor } from "@/lib/content/types";
-import { blockFontStyle } from "@/lib/content/fonts";
+import { blockTypeProps } from "@/lib/content/fonts";
 import { richLines } from "@/components/ui/Rich";
 
 /* Tile sizes cycle so the strip feels like a loose collage; captions, art and colors come from the CMS. */
@@ -45,7 +45,7 @@ export default function Gallery({ content, instagram }: { content: SiteContent["
   }, [tiles.length]);
 
   return (
-    <section style={blockFontStyle(content)} className="overflow-hidden bg-cream py-28 font-sans text-ink sm:py-40">
+    <section {...blockTypeProps(content)} className="overflow-hidden bg-cream py-28 font-sans text-ink sm:py-40">
       <div className="mx-auto mb-14 flex max-w-[1440px] flex-col justify-between gap-6 px-5 sm:px-8 md:flex-row md:items-end">
         <SplitReveal
           className="font-display text-[clamp(3rem,7vw,7rem)] font-semibold leading-[0.9] tracking-[-0.035em]"

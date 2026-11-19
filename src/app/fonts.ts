@@ -37,16 +37,17 @@ const satoshi = localFont({
 
 const instrument = Instrument_Serif({ variable: "--font-instrument", weight: "400", style: "italic", subsets: ["latin"] });
 
-/* Hebrew site defaults. Display: Fredoka, the logotype's family. Body: Heebo. Accent: Frank Ruhl Libre. */
-const fredoka = Fredoka({ variable: "--font-hebrew", weight: ["500", "600", "700"], subsets: ["hebrew", "latin"] });
-const heebo = Heebo({ variable: "--font-heebo", weight: ["400", "500", "700"], subsets: ["hebrew", "latin"] });
-const frank = Frank_Ruhl_Libre({ variable: "--font-frank", weight: ["500", "700"], subsets: ["hebrew", "latin"] });
+/* Variable fonts (no `weight` list) load their whole weight range, so the admin's weight picker works.
+   Hebrew site defaults. Display: Fredoka, the logotype's family. Body: Heebo. Accent: Frank Ruhl Libre. */
+const fredoka = Fredoka({ variable: "--font-hebrew", subsets: ["hebrew", "latin"] });
+const heebo = Heebo({ variable: "--font-heebo", subsets: ["hebrew", "latin"] });
+const frank = Frank_Ruhl_Libre({ variable: "--font-frank", subsets: ["hebrew", "latin"] });
 
 /* Extra choices for the per-block font pickers in /admin (see src/lib/content/fonts.ts).
    Not preloaded: a browser only downloads one when a section uses it.
    (next/font needs literal options here, so they are written out for each font.) */
-const rubik = Rubik({ variable: "--font-rubik", weight: ["400", "500", "700"], subsets: ["hebrew", "latin"], preload: false, display: "swap" });
-const assistant = Assistant({ variable: "--font-assistant", weight: ["400", "600", "700"], subsets: ["hebrew", "latin"], preload: false, display: "swap" });
+const rubik = Rubik({ variable: "--font-rubik", subsets: ["hebrew", "latin"], preload: false, display: "swap" });
+const assistant = Assistant({ variable: "--font-assistant", subsets: ["hebrew", "latin"], preload: false, display: "swap" });
 const varela = Varela_Round({ variable: "--font-varela", weight: "400", subsets: ["hebrew", "latin"], preload: false, display: "swap" });
 const secular = Secular_One({ variable: "--font-secular", weight: "400", subsets: ["hebrew", "latin"], preload: false, display: "swap" });
 const suez = Suez_One({ variable: "--font-suez", weight: "400", subsets: ["hebrew", "latin"], preload: false, display: "swap" });

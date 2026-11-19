@@ -59,6 +59,32 @@ html[lang="he"] .uppercase:not(.admin-ltr .uppercase) {
   letter-spacing: 0.06em;
 }
 
+/*
+ * Per-block typography from /admin (see src/lib/content/fonts.ts). A section root gets CSS variables
+ * plus a data-* flag for each setting that isn't "Default"; these rules only apply under that flag.
+ * Unlayered, so they win over Tailwind's size/weight/leading utilities.
+ * Size uses `zoom` as a multiplier on the design's own (responsive) size; the outermost match only,
+ * so nested text isn't scaled twice.
+ */
+:is([data-hl-size].font-display, [data-hl-size] .font-display):not(.font-display .font-display) {
+  zoom: var(--hl-size);
+}
+:is([data-hl-weight].font-display, [data-hl-weight] .font-display) {
+  font-weight: var(--hl-weight);
+}
+:is([data-hl-leading].font-display, [data-hl-leading] .font-display) {
+  line-height: var(--hl-leading);
+}
+[data-tx-size] :is(p, li, label, button, a, dd, dt, figcaption, legend, input, textarea):not(.font-display, .font-display *, :is(p, li, label, button, a, dd, dt, figcaption, legend) *) {
+  zoom: var(--tx-size);
+}
+[data-tx-weight] :is(p, li, label, button, a, dd, dt, figcaption, legend, input, textarea, span):not(.font-display, .font-display *) {
+  font-weight: var(--tx-weight);
+}
+[data-tx-leading] :is(p, li, label, button, a, dd, dt, figcaption, legend, textarea):not(.font-display, .font-display *) {
+  line-height: var(--tx-leading);
+}
+
 /* The admin stays English and left-to-right, with the original Latin fonts. */
 .admin-ltr {
   --font-sans: var(--font-satoshi), var(--font-heebo), ui-sans-serif, system-ui, sans-serif;

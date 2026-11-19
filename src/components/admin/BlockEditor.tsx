@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { saveBlockAction, resetBlockAction } from "@/app/admin/actions";
 import { emptyItem, type BlockSchema, type Field } from "@/lib/content/schema";
-import { fontStack } from "@/lib/content/fonts";
+import { fontStack, TYPE_KEYS } from "@/lib/content/fonts";
 import LocalDate from "./LocalDate";
 
 type Obj = Record<string, unknown>;
@@ -74,17 +74,19 @@ export default function BlockEditor({ schema, initial, updatedAt }: { schema: Bl
           save();
         }}
       >
-        {schema.fields.map((f) => (
-          <div key={f.key}>
-            {f.key === "fontHeadline" && (
-              <div className="mb-5 border-t border-ink/10 pt-6">
-                <h2 className="font-display text-xl font-semibold">Fonts</h2>
-                <p className="mt-1 text-sm text-ink/60">Pick fonts for this section only. “Default” keeps the site-wide fonts.</p>
-              </div>
-            )}
-            <FieldInput field={f} value={value[f.key]} onChange={(v) => setValue((o) => ({ ...o, [f.key]: v }))} path={f.key} />
-          </div>
-        ))}
+        {schema.fields
+          .filter((f) => !(TYPE_KEYS as readonly string[]).includes(f.key))
+          .map((f) => (
+            <FieldInput key={f.key} field={f} value={value[f.key]} onChange={(v) => setValue((o) => ({ ...o, [f.key]: v }))} path={f.key} />
+          ))}
+        {schema.fields.some((f) => f.key === "fontHeadline") && (
+          <TypographyPanel
+            fields={schema.fields}
+            value={value}
+            onChange={(k, v) => setValue((o) => ({ ...o, [k]: v }))}
+            navHint={schema.key === "brand"}
+          />
+        )}
 
         <div className="sticky bottom-4 z-10 -mx-2 flex flex-wrap items-center gap-3 rounded-2xl bg-ink/90 p-3 text-cream shadow-xl backdrop-blur sm:-mx-3">
           <button type="submit" disabled={!dirty || pending} className="rounded-full bg-amber px-6 py-2.5 text-sm font-bold text-ink transition hover:bg-cream disabled:opacity-40">
@@ -174,7 +176,6 @@ function FieldInput({ field, value, onChange, path }: { field: Field; value: unk
               </option>
             ))}
           </select>
-          {field.preview === "font" && <FontPreview value={String(value ?? "")} headline={field.key === "fontHeadline"} />}
           {help}
         </div>
       );
@@ -283,17 +284,76 @@ function ListInput({ field, value, onChange, path }: { field: Extract<Field, { t
   );
 }
 
-/** Live sample of a font choice, in Hebrew, so the admin can see it before saving. */
-function FontPreview({ value, headline }: { value: string; headline: boolean }) {
-  const family = fontStack(value) ?? (headline ? "var(--font-hebrew), var(--font-heebo), sans-serif" : "var(--font-heebo), sans-serif");
+/** Headline and text typography for this section: font, size, weight and line height, with a live preview. */
+function TypographyPanel({ fields, value, onChange, navHint }: { fields: Field[]; value: Obj; onChange: (key: string, v: unknown) => void; navHint: boolean }) {
+  const byKey = (k: string) => fields.find((f) => f.key === k);
+  const groups = [
+    { title: "Headlines", hint: navHint ? "The menu links and the mobile menu." : "Big headings and display text.", keys: ["fontHeadline", "sizeHeadline", "weightHeadline", "leadingHeadline"], headline: true },
+    { title: "Text", hint: "Paragraphs, labels and buttons.", keys: ["fontText", "sizeText", "weightText", "leadingText"], headline: false },
+  ];
+
+  return (
+    <section className="border-t border-ink/10 pt-6">
+      <h2 className="font-display text-xl font-semibold">Typography</h2>
+      <p className="mt-1 text-sm text-ink/60">
+        For this section only{navHint ? " (here: the top navigation bar)" : ""}. “Default” keeps the design as it is. Size is relative to the normal size, so it still adapts to phones.
+      </p>
+      <div className="mt-5 grid gap-5">
+        {groups.map((g) => {
+          const [fontK, sizeK, weightK, leadingK] = g.keys;
+          return (
+            <div key={g.title} className="rounded-2xl border border-ink/10 bg-[#f7f3ec]/70 p-4">
+              <div className="flex items-baseline justify-between gap-3">
+                <h3 className="font-bold">{g.title}</h3>
+                <p className="text-xs text-ink/50">{g.hint}</p>
+              </div>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {g.keys.map((k) => {
+                  const f = byKey(k);
+                  return f ? <FieldInput key={k} field={f} value={value[k]} onChange={(v) => onChange(k, v)} path={k} /> : null;
+                })}
+              </div>
+              <TypePreview
+                headline={g.headline}
+                font={String(value[fontK] ?? "")}
+                size={String(value[sizeK] ?? "")}
+                weight={String(value[weightK] ?? "")}
+                leading={String(value[leadingK] ?? "")}
+              />
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+/** Live Hebrew sample of the chosen typography, so the admin sees it before saving. */
+function TypePreview({ headline, font, size, weight, leading }: { headline: boolean; font: string; size: string; weight: string; leading: string }) {
+  const family = fontStack(font) ?? (headline ? "var(--font-hebrew), var(--font-heebo), sans-serif" : "var(--font-heebo), sans-serif");
+  const base = headline ? 1.875 : 1; // rem: roughly a section headline vs. body text, scaled down to fit
   return (
     <p
       dir="rtl"
       lang="he"
-      className={`mt-2 rounded-xl bg-cobalt px-4 py-3 text-cream ${headline ? "text-3xl font-semibold leading-tight" : "text-base"}`}
-      style={{ fontFamily: family }}
+      className="mt-3 overflow-hidden rounded-xl bg-cobalt px-4 py-3 text-cream"
+      style={{
+        fontFamily: family,
+        fontSize: `${base * (Number(size) || 1)}rem`,
+        fontWeight: weight ? Number(weight) : headline ? 600 : 400,
+        lineHeight: leading || (headline ? "1" : "1.6"),
+        fontSynthesisWeight: "none",
+      }}
     >
-      {headline ? "חומרים פשוטים, טעם יוצא דופן" : "אספרסו חד־זני, קולד ברו של 18 שעות ומאפים מהתנור של הבוקר. ₪15"}
+      {headline ? (
+        <>
+          חומרים פשוטים,
+          <br />
+          טעם יוצא דופן
+        </>
+      ) : (
+        "אספרסו חד־זני, קולד ברו של 18 שעות ומאפים מהתנור של הבוקר. מוגש מטנדר כחול שמתייצב כל יום בפינה אחרת. ₪15"
+      )}
     </p>
   );
 }

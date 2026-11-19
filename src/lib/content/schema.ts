@@ -4,7 +4,7 @@
  */
 import type { BlockKey, SiteContent } from "./types";
 import { defaults } from "./defaults";
-import { FONT_OPTIONS } from "./fonts";
+import { FONT_OPTIONS, LEADING_OPTIONS, SIZE_OPTIONS, WEIGHT_OPTIONS } from "./fonts";
 
 type Base = { key: string; label: string; help?: string };
 export type Field =
@@ -222,29 +222,29 @@ const contentSchemas: BlockSchema[] = [
   },
 ];
 
-/* ---------- per-block fonts ---------- */
+/* ---------- per-block typography ---------- */
 
-const FONT_CHOICES = [{ value: "", label: "Default" }, ...FONT_OPTIONS.map((o) => ({ value: o.value, label: o.label }))];
+const withDefault = (opts: readonly { value: string; label: string }[]) => [{ value: "", label: "Default" }, ...opts.map((o) => ({ value: o.value, label: o.label }))];
+const FONT_CHOICES = withDefault(FONT_OPTIONS);
+const SIZE_CHOICES = withDefault(SIZE_OPTIONS);
+const WEIGHT_CHOICES = withDefault(WEIGHT_OPTIONS);
+const LEADING_CHOICES = withDefault(LEADING_OPTIONS);
 
-/** Blocks that are visible on the page get a headline-font and a text-font picker. */
-const FONT_HELP: Partial<Record<BlockKey, string>> = {
-  brand: "Applies to the top navigation bar and the mobile menu.",
-};
+/** Blocks that are visible on the page get headline and text typography controls. */
 const NO_FONTS: BlockKey[] = ["seo"];
 
-const fontFields = (key: BlockKey): Field[] => [
-  {
-    key: "fontHeadline",
-    label: "Headline font",
-    type: "select",
-    preview: "font",
-    options: FONT_CHOICES,
-    help: FONT_HELP[key] ?? "Big headings and display text in this section. Default is Fredoka.",
-  },
-  { key: "fontText", label: "Text font", type: "select", preview: "font", options: FONT_CHOICES, help: "Paragraphs, labels and buttons. Default is Heebo." },
+const typeFields = (): Field[] => [
+  { key: "fontHeadline", label: "Font", type: "select", preview: "font", options: FONT_CHOICES },
+  { key: "sizeHeadline", label: "Size", type: "select", options: SIZE_CHOICES },
+  { key: "weightHeadline", label: "Weight", type: "select", options: WEIGHT_CHOICES },
+  { key: "leadingHeadline", label: "Line height", type: "select", options: LEADING_CHOICES },
+  { key: "fontText", label: "Font", type: "select", preview: "font", options: FONT_CHOICES },
+  { key: "sizeText", label: "Size", type: "select", options: SIZE_CHOICES },
+  { key: "weightText", label: "Weight", type: "select", options: WEIGHT_CHOICES },
+  { key: "leadingText", label: "Line height", type: "select", options: LEADING_CHOICES },
 ];
 
-export const blockSchemas: BlockSchema[] = contentSchemas.map((s) => (NO_FONTS.includes(s.key) ? s : { ...s, fields: [...s.fields, ...fontFields(s.key)] }));
+export const blockSchemas: BlockSchema[] = contentSchemas.map((s) => (NO_FONTS.includes(s.key) ? s : { ...s, fields: [...s.fields, ...typeFields()] }));
 
 export const schemaFor = (key: string) => blockSchemas.find((b) => b.key === key);
 

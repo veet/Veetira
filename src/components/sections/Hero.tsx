@@ -9,7 +9,7 @@ import Logotype from "@/components/art/Logotype";
 import Magnetic from "@/components/ui/Magnetic";
 import { richLines } from "@/components/ui/Rich";
 import type { SiteContent } from "@/lib/content/types";
-import { blockFontStyle } from "@/lib/content/fonts";
+import { blockTypeProps } from "@/lib/content/fonts";
 
 /* Icons for the three hero chips, in order; labels come from the CMS. */
 const chipIcons = ["M4 16c2-8 14-8 16 0M7 16c0-3 2-6 5-6s5 3 5 6M12 10V7", "M12 3c5 2 7 7 5 12s-8 6-10 3-1-9 1-12 3-4 4-3zM11 5c-2 4 3 7 0 14", "M5 12h14l-2 8H7zM6 12a6 6 0 0 1 12 0M12 3v3"];
@@ -55,7 +55,7 @@ export default function Hero({ content }: { content: SiteContent["hero"] }) {
   );
 
   return (
-    <section ref={root} id="top" style={blockFontStyle(content)} className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-cobalt pt-24 font-sans text-cream">
+    <section ref={root} id="top" {...blockTypeProps(content)} className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-cobalt pt-24 font-sans text-cream">
       {/* lamp glows */}
       <div aria-hidden className="pointer-events-none absolute -top-32 left-[12%] -z-10 h-[34rem] w-[34rem] rounded-full bg-amber/20 blur-[120px]" />
       <div aria-hidden className="pointer-events-none absolute -top-40 right-[8%] -z-10 h-[30rem] w-[30rem] rounded-full bg-amber/15 blur-[120px]" />

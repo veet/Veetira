@@ -3,9 +3,10 @@
 import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, ScrollTrigger, MOTION_OK } from "@/lib/motion";
+import type { blockTypeProps } from "@/lib/content/fonts";
 
 /** Infinite marquee whose speed follows scroll velocity and whose direction follows scroll direction. */
-export default function Marquee({ words, className = "", style }: { words: string[]; className?: string; style?: React.CSSProperties }) {
+export default function Marquee({ words, className = "", type }: { words: string[]; className?: string; type?: ReturnType<typeof blockTypeProps> }) {
   const track = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
@@ -49,7 +50,7 @@ export default function Marquee({ words, className = "", style }: { words: strin
   );
 
   return (
-    <div dir="ltr" style={style} className={`overflow-hidden whitespace-nowrap ${className}`}>
+    <div dir="ltr" {...type} className={`overflow-hidden whitespace-nowrap ${className}`}>
       <div ref={track} className="flex w-max will-change-transform">
         {row(false)}
         {row(true)}

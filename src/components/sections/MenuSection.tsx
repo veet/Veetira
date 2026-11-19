@@ -4,7 +4,7 @@ import { useRef, useState, type PointerEvent } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, MOTION_OK, ScrollTrigger, scrollToTarget } from "@/lib/motion";
 import type { MenuItem, SiteContent } from "@/lib/content/types";
-import { blockFontStyle } from "@/lib/content/fonts";
+import { blockTypeProps } from "@/lib/content/fonts";
 import { rich, richLines } from "@/components/ui/Rich";
 import { foodArt } from "@/components/art/Food";
 import SplitReveal from "@/components/ui/SplitReveal";
@@ -115,7 +115,7 @@ export default function MenuSection({ content }: { content: SiteContent["menu"] 
 
 
   return (
-    <section ref={root} id="menu" style={blockFontStyle(content)} className="relative bg-cobalt font-sans text-cream">
+    <section ref={root} id="menu" {...blockTypeProps(content)} className="relative bg-cobalt font-sans text-cream">
       <div className="menu-pin flex min-h-[100svh] flex-col justify-center gap-10 overflow-hidden py-24 md:gap-10 md:py-20">
         <div className="mx-auto flex w-full max-w-[1440px] flex-col justify-between gap-8 px-5 sm:px-8 md:flex-row md:items-end">
           <div>

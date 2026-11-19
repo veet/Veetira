@@ -6,7 +6,7 @@ import { ScrollTrigger, getLenis, onIntroDone, gsap } from "@/lib/motion";
 import { getStatus, useNow } from "@/lib/time";
 import Logotype from "@/components/art/Logotype";
 import type { SiteContent, Stop } from "@/lib/content/types";
-import { blockFontStyle } from "@/lib/content/fonts";
+import { blockTypeProps } from "@/lib/content/fonts";
 
 const links = [
   { href: "#menu", label: "תפריט" },
@@ -51,7 +51,7 @@ export default function Nav({ brand, stops }: { brand: SiteContent["brand"]; sto
     <>
       <header
         ref={bar}
-        style={blockFontStyle(brand)}
+        {...blockTypeProps(brand)}
         className={`fixed inset-x-0 top-0 z-50 font-sans transition-colors duration-500 ${solid && !open ? "bg-cobalt/80 backdrop-blur-xl" : ""}`}
       >
         <nav className="mx-auto flex h-18 max-w-[1440px] items-center justify-between px-5 text-cream sm:px-8">
@@ -99,7 +99,7 @@ export default function Nav({ brand, stops }: { brand: SiteContent["brand"]; sto
         {open && (
           <motion.div
             id="mobile-menu"
-            style={blockFontStyle(brand)}
+            {...blockTypeProps(brand)}
             initial={{ clipPath: "circle(0% at 0% 0%)" }}
             animate={{ clipPath: "circle(150% at 0% 0%)" }}
             exit={{ clipPath: "circle(0% at 0% 0%)" }}
