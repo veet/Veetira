@@ -12,8 +12,11 @@ const DB_PATH = path.resolve(/*turbopackIgnore: true*/ process.cwd(), process.en
 
 function open() {
   fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
-  const db = new DatabaseSync(DB_PATH);
+  // `timeout`: if another process (e.g. a parallel build worker) holds the lock, wait up to 5s
+  // instead of failing with "database is locked".
+  const db = new DatabaseSync(DB_PATH, { timeout: 5000 });
   db.exec(`
+    PRAGMA busy_timeout = 5000;
     PRAGMA journal_mode = WAL;
     PRAGMA foreign_keys = ON;
 
@@ -46,6 +49,19 @@ function open() {
   return db;
 }
 
-// Reuse one connection across hot reloads in development.
+// One connection per process, reused across hot reloads in development.
 const g = globalThis as unknown as { __db?: DatabaseSync };
-export const db: DatabaseSync = g.__db ?? (g.__db = open());
+const getDb = () => g.__db ?? (g.__db = open());
+
+/**
+ * Opened lazily on first use, not when a module is imported: `next build` imports every route in
+ * several workers at once, and opening (and creating) the file from all of them at the same moment
+ * made Railway builds fail with "database is locked".
+ */
+export const db = new Proxy({} as DatabaseSync, {
+  get(_, prop) {
+    const real = getDb();
+    const value = Reflect.get(real, prop, real);
+    return typeof value === "function" ? value.bind(real) : value;
+  },
+});
