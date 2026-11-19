@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { gsap, getLenis, markIntroDone, prefersReducedMotion } from "@/lib/motion";
+import { gsap, getLenis, markIntroDone, prefersReducedMotion, ScrollTrigger } from "@/lib/motion";
 
 const KEY = "rr-intro-seen";
 
@@ -35,6 +35,9 @@ export default function Preloader() {
         document.documentElement.style.overflow = "";
         getLenis()?.start();
         setGone(true);
+        // The scrollbar is back now, so the viewport is narrower than while the preloader hid it.
+        // Re-measure, or the pinned menu keeps the wider width and sticks out sideways.
+        requestAnimationFrame(() => ScrollTrigger.refresh());
       },
     });
 

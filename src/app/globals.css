@@ -40,6 +40,9 @@
 
 html {
   background: var(--color-cobalt-deep);
+  /* Never scroll sideways. On a right-to-left page anything that overhangs on the left (e.g. a
+     pinned section measured while the scrollbar was hidden) would otherwise be scrollable. */
+  overflow-x: clip;
 }
 
 body {
