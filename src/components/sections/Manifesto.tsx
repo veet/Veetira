@@ -60,7 +60,7 @@ export default function Manifesto({ content }: { content: SiteContent["manifesto
   return (
     <section ref={root} {...blockTypeProps(content)} className="bg-cream py-28 font-sans sm:py-40">
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
-        <div className="mb-12 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em] text-cobalt">
+        <div className="mb-12 eyebrow flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em] text-cobalt">
           <span className="h-px w-12 bg-cobalt" /> {content.eyebrow}
         </div>
         <p className="mf-text max-w-[22ch] font-display text-[clamp(2.2rem,6vw,6rem)] font-medium leading-[1.02] tracking-[-0.03em] text-ink md:max-w-[24ch]">

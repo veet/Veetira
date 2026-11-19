@@ -45,6 +45,23 @@ function open() {
       email      TEXT NOT NULL UNIQUE COLLATE NOCASE,
       created_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
+
+    CREATE TABLE IF NOT EXISTS orders (
+      id          INTEGER PRIMARY KEY AUTOINCREMENT,
+      name        TEXT NOT NULL,
+      phone       TEXT NOT NULL,
+      pickup_date TEXT NOT NULL,           -- YYYY-MM-DD
+      pickup_time TEXT NOT NULL,           -- HH:MM
+      location    TEXT NOT NULL DEFAULT '',
+      items       TEXT NOT NULL,           -- JSON: [{ name, price, qty }]
+      total       REAL NOT NULL,
+      payment     TEXT NOT NULL CHECK (payment IN ('bit','cash')),
+      paid        INTEGER NOT NULL DEFAULT 0,
+      status      TEXT NOT NULL DEFAULT 'new' CHECK (status IN ('new','preparing','ready','picked_up','cancelled')),
+      note        TEXT NOT NULL DEFAULT '',
+      created_at  TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS orders_created ON orders(created_at DESC);
   `);
   return db;
 }

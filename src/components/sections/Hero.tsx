@@ -9,7 +9,7 @@ import Logotype from "@/components/art/Logotype";
 import Magnetic from "@/components/ui/Magnetic";
 import { richLines } from "@/components/ui/Rich";
 import type { SiteContent } from "@/lib/content/types";
-import { blockTypeProps } from "@/lib/content/fonts";
+import { blockTypeProps, imageColumnClass } from "@/lib/content/fonts";
 
 /* Icons for the three hero chips, in order; labels come from the CMS. */
 const chipIcons = ["M4 16c2-8 14-8 16 0M7 16c0-3 2-6 5-6s5 3 5 6M12 10V7", "M12 3c5 2 7 7 5 12s-8 6-10 3-1-9 1-12 3-4 4-3zM11 5c-2 4 3 7 0 14", "M5 12h14l-2 8H7zM6 12a6 6 0 0 1 12 0M12 3v3"];
@@ -71,7 +71,7 @@ export default function Hero({ content }: { content: SiteContent["hero"] }) {
           <h1 className="mx-auto w-[min(90vw,1080px)]">
             <Logotype className="h-auto w-full overflow-visible" color="#f4eee4" accent="#f2b65a" glyphClassName="hero-letter" heartClassName="hero-heart" title={`אהבות קטנות — ${content.eyebrow}`} />
           </h1>
-          <div className="hero-fade mt-6 flex sm:mt-8 items-center justify-center gap-4 text-[11px] font-medium uppercase tracking-[0.25em] text-cream/80 sm:text-xs sm:tracking-[0.4em]">
+          <div className="hero-fade eyebrow mt-6 flex sm:mt-8 items-center justify-center gap-4 text-[11px] font-medium uppercase tracking-[0.25em] text-cream/80 sm:text-xs sm:tracking-[0.4em]">
             <span className="h-px w-6 bg-cream/40 sm:w-20" />
             {content.eyebrow}
             <span className="h-px w-6 bg-cream/40 sm:w-20" />
@@ -88,7 +88,7 @@ export default function Hero({ content }: { content: SiteContent["hero"] }) {
               className="font-display text-3xl font-medium leading-[1.02] tracking-tight sm:text-4xl lg:text-5xl"
               lines={richLines(content.headline, "text-amber text-[1.15em]")}
             />
-            <div className="hero-fade mt-8 flex items-stretch gap-0 text-cream/90">
+            <div className="hero-fade eyebrow mt-8 flex items-stretch gap-0 text-cream/90">
               {content.chips.slice(0, 3).map((c, i) => (
                 <div key={i} className={`flex flex-col items-center gap-2 px-5 first:ps-0 ${i ? "border-s border-cream/25" : ""}`}>
                   <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
@@ -101,7 +101,7 @@ export default function Hero({ content }: { content: SiteContent["hero"] }) {
           </div>
 
           {/* Food stack */}
-          <div className="relative order-1 mx-auto h-[min(64vw,440px)] w-[min(80vw,520px)] md:col-span-2 lg:order-2 lg:col-span-1 lg:h-[min(34vw,440px)] lg:w-[min(40vw,520px)]">
+          <div className={`relative order-1 mx-auto ${imageColumnClass(content.alignImage, "three")} h-[min(64vw,440px)] w-[min(80vw,520px)] md:col-span-2 lg:order-2 lg:col-span-1 lg:h-[min(34vw,440px)] lg:w-[min(40vw,520px)]`}>
             <div aria-hidden className="absolute left-1/2 top-[6%] h-[88%] w-[70%] -translate-x-1/2 rounded-full bg-azure/70 blur-[2px]" />
             <div className="hero-float absolute left-1/2 top-0 w-[46%] -translate-x-1/2" data-speed="0.15">
               <div className="hero-float-in relative">
@@ -128,7 +128,7 @@ export default function Hero({ content }: { content: SiteContent["hero"] }) {
             <p className="max-w-xs text-base leading-relaxed text-cream/75">
               {content.intro}
             </p>
-            <div className="flex flex-wrap gap-3 md:justify-end">
+            <div className="btn-row flex flex-wrap gap-3 md:justify-end">
               <Magnetic href="#find-us" cursor="מצאו" className="rounded-full bg-cream px-7 py-4 text-sm font-bold text-cobalt transition-colors hover:bg-amber">
                 {content.primaryCta}
               </Magnetic>

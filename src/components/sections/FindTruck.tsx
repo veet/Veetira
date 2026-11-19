@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, MOTION_OK } from "@/lib/motion";
 import type { SiteContent } from "@/lib/content/types";
-import { blockTypeProps } from "@/lib/content/fonts";
+import { blockTypeProps, imageColumnClass } from "@/lib/content/fonts";
 import { DAY_SHORT, formatRange, getStatus, useNow } from "@/lib/time";
 import { richLines } from "@/components/ui/Rich";
 import SplitReveal from "@/components/ui/SplitReveal";
@@ -59,7 +59,7 @@ export default function FindTruck({ content }: { content: SiteContent["findTruck
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
         <div className="flex flex-col justify-between gap-8 lg:flex-row lg:items-end">
           <div>
-            <p className="mb-5 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em] text-cobalt">
+            <p className="mb-5 eyebrow flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em] text-cobalt">
               <span className="h-px w-12 bg-cobalt" /> {content.eyebrow}
             </p>
             <SplitReveal
@@ -80,7 +80,7 @@ export default function FindTruck({ content }: { content: SiteContent["findTruck
 
         <div className="mt-16 grid gap-8 lg:grid-cols-[1.25fr_1fr]">
           {/* Stylized map */}
-          <div className="map-box relative aspect-[5/3] overflow-hidden rounded-[2rem] bg-cobalt" data-cursor="מפה">
+          <div className={`map-box relative aspect-[5/3] overflow-hidden rounded-[2rem] bg-cobalt ${imageColumnClass(content.alignImage, "two-first")}`} data-cursor="מפה">
             <svg viewBox="0 0 1000 600" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice" aria-hidden>
               <defs>
                 <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">

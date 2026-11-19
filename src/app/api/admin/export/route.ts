@@ -1,7 +1,7 @@
 import { isAdmin } from "@/server/auth";
-import { listBookings, listSubscribers, toCsv } from "@/server/records";
+import { listBookings, listOrders, listSubscribers, toCsv } from "@/server/records";
 
-/** GET /api/admin/export?type=bookings|subscribers — CSV download for the admin. */
+/** GET /api/admin/export?type=orders|bookings|subscribers — CSV download for the admin. */
 export async function GET(request: Request) {
   if (!(await isAdmin())) return new Response("Not authorised", { status: 401 });
 
@@ -12,6 +12,9 @@ export async function GET(request: Request) {
     csv = toCsv(listSubscribers(), ["email", "created_at"]);
   } else if (type === "bookings") {
     csv = toCsv(listBookings(), ["id", "created_at", "status", "name", "email", "event_date", "guests", "event_type", "message", "notes"]);
+  } else if (type === "orders") {
+    const rows = listOrders().map((o) => ({ ...o, items: o.items.map((i) => `${i.qty} x ${i.name}`).join("; "), paid: o.paid ? "yes" : "no" }));
+    csv = toCsv(rows, ["id", "created_at", "status", "paid", "payment", "name", "phone", "pickup_date", "pickup_time", "location", "items", "total", "note"]);
   } else {
     return new Response("Unknown export", { status: 400 });
   }

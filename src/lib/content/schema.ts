@@ -4,7 +4,7 @@
  */
 import type { BlockKey, SiteContent } from "./types";
 import { defaults } from "./defaults";
-import { FONT_OPTIONS, LEADING_OPTIONS, SIZE_OPTIONS, WEIGHT_OPTIONS } from "./fonts";
+import { ALIGN_OPTIONS, FONT_OPTIONS, LEADING_OPTIONS, SIZE_OPTIONS, WEIGHT_OPTIONS } from "./fonts";
 
 type Base = { key: string; label: string; help?: string };
 export type Field =
@@ -18,7 +18,7 @@ export type Field =
 export type BlockSchema = { key: BlockKey; title: string; description: string; fields: Field[] };
 
 const ART = ["cup", "iced", "croissant", "cookie", "cake", "bun", "burrito"].map((v) => ({ value: v, label: v[0].toUpperCase() + v.slice(1) }));
-const ACCENT_HELP = "Wrap a word in *asterisks* for the italic accent. Each new line animates separately.";
+const ACCENT_HELP = "Wrap words in *asterisks* to highlight them (accent color and font). Each new line animates separately.";
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 const contentSchemas: BlockSchema[] = [
@@ -208,6 +208,26 @@ const contentSchemas: BlockSchema[] = [
     ],
   },
   {
+    key: "ordering",
+    title: "Ordering & payment",
+    description: "Online pre-orders from the menu: on/off, pickup times, and Bit / cash payment.",
+    fields: [
+      { key: "enabled", label: "Online ordering", type: "select", options: [{ value: "yes", label: "On — show “add” buttons and the cart" }, { value: "no", label: "Off — menu only" }] },
+      { key: "title", label: "Cart title", type: "text", max: 40 },
+      { key: "intro", label: "Cart intro line", type: "textarea", rows: 2, max: 200 },
+      { key: "addLabel", label: "Add-to-order button text", type: "text", max: 24 },
+      { key: "pickupNote", label: "Pickup note", type: "text", max: 120 },
+      { key: "leadMinutes", label: "Earliest pickup (minutes from now)", type: "number", min: 0, max: 240, help: "How much notice you need to prepare an order." },
+      { key: "slotMinutes", label: "Pickup time steps (minutes)", type: "number", min: 5, max: 60, step: 5 },
+      { key: "bitPhone", label: "Bit phone number", type: "text", max: 20, help: "Shown to customers who choose Bit." },
+      { key: "bitLink", label: "Bit payment link (optional)", type: "text", max: 300, help: "If you have a Bit payment link, paste it here — customers get a “Pay with Bit” button." },
+      { key: "bitNote", label: "Bit instructions", type: "textarea", rows: 2, max: 200 },
+      { key: "cashNote", label: "Cash instructions", type: "textarea", rows: 2, max: 200 },
+      { key: "successTitle", label: "Confirmation title", type: "text", max: 60, help: "Use *asterisks* for the accent." },
+      { key: "successBody", label: "Confirmation message", type: "textarea", rows: 2, max: 200 },
+    ],
+  },
+  {
     key: "footer",
     title: "Footer & newsletter",
     description: "Closing headline, hours and the newsletter signup.",
@@ -229,12 +249,34 @@ const FONT_CHOICES = withDefault(FONT_OPTIONS);
 const SIZE_CHOICES = withDefault(SIZE_OPTIONS);
 const WEIGHT_CHOICES = withDefault(WEIGHT_OPTIONS);
 const LEADING_CHOICES = withDefault(LEADING_OPTIONS);
+const ALIGN_CHOICES = withDefault(ALIGN_OPTIONS);
+
+/* Which blocks have buttons / images that can be aligned. */
+const HAS_BUTTONS: BlockKey[] = ["hero", "menu", "events"];
+const HAS_IMAGE: BlockKey[] = ["hero", "menu", "findTruck", "story", "gallery"];
+const NO_TEXT_ALIGN: BlockKey[] = ["brand", "marquee"];
+const IMAGE_HELP: Partial<Record<BlockKey, string>> = {
+  hero: "Where the coffee & cake picture sits on wide screens.",
+  menu: "Where the picture sits inside each menu card.",
+  findTruck: "Which side the map is on (Center puts it full width above the list).",
+  story: "Which side the photo collage is on (Center puts it full width below the text).",
+  gallery: "Where the picture sits inside each gallery tile.",
+};
+
+const alignFields = (key: BlockKey): Field[] => [
+  ...(NO_TEXT_ALIGN.includes(key) ? [] : [{ key: "alignText", label: "Text alignment", type: "select", options: ALIGN_CHOICES } as Field]),
+  ...(HAS_BUTTONS.includes(key)
+    ? [{ key: "alignButtons", label: "Button alignment", type: "select", options: ALIGN_CHOICES, help: key === "menu" ? "The “add to order” button on each card." : undefined } as Field]
+    : []),
+  ...(HAS_IMAGE.includes(key) ? [{ key: "alignImage", label: "Image alignment", type: "select", options: ALIGN_CHOICES, help: IMAGE_HELP[key] } as Field] : []),
+];
 
 /** Blocks that are visible on the page get headline and text typography controls. */
-const NO_FONTS: BlockKey[] = ["seo"];
+const NO_FONTS: BlockKey[] = ["seo", "ordering"];
 
 const typeFields = (): Field[] => [
   { key: "fontHeadline", label: "Font", type: "select", preview: "font", options: FONT_CHOICES },
+  { key: "fontAccent", label: "Accent font (*highlighted* words)", type: "select", options: FONT_CHOICES },
   { key: "sizeHeadline", label: "Size", type: "select", options: SIZE_CHOICES },
   { key: "weightHeadline", label: "Weight", type: "select", options: WEIGHT_CHOICES },
   { key: "leadingHeadline", label: "Line height", type: "select", options: LEADING_CHOICES },
@@ -244,7 +286,7 @@ const typeFields = (): Field[] => [
   { key: "leadingText", label: "Line height", type: "select", options: LEADING_CHOICES },
 ];
 
-export const blockSchemas: BlockSchema[] = contentSchemas.map((s) => (NO_FONTS.includes(s.key) ? s : { ...s, fields: [...s.fields, ...typeFields()] }));
+export const blockSchemas: BlockSchema[] = contentSchemas.map((s) => (NO_FONTS.includes(s.key) ? s : { ...s, fields: [...s.fields, ...typeFields(), ...alignFields(s.key)] }));
 
 export const schemaFor = (key: string) => blockSchemas.find((b) => b.key === key);
 

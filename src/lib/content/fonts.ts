@@ -55,6 +55,7 @@ export type FontValue = "" | (typeof FONT_OPTIONS)[number]["value"];
 /** Per-block typography; every field is optional and "" keeps the default. */
 export type BlockFonts = {
   fontHeadline?: FontValue;
+  fontAccent?: FontValue;
   sizeHeadline?: string;
   weightHeadline?: string;
   leadingHeadline?: string;
@@ -62,10 +63,32 @@ export type BlockFonts = {
   sizeText?: string;
   weightText?: string;
   leadingText?: string;
+  alignText?: Align;
+  alignButtons?: Align;
+  alignImage?: Align;
 };
 
+/** Physical directions, since the site is right-to-left: "right" is where lines start. "" = design default. */
+export type Align = "" | "right" | "center" | "left";
+export const ALIGN_OPTIONS = [
+  { value: "right", label: "Right" },
+  { value: "center", label: "Center" },
+  { value: "left", label: "Left" },
+];
+export const ALIGN_KEYS = ["alignText", "alignButtons", "alignImage"] as const;
+
+/** Tailwind classes that move a section's main image column (hero, map, story collage). */
+export function imageColumnClass(align: Align | undefined, layout: "three" | "two-first" | "two-second"): string {
+  if (!align) return "";
+  if (layout === "three") return align === "right" ? "lg:order-first" : align === "left" ? "lg:order-last" : "";
+  // two-column grids: the image is the first (right) or second (left) column by default
+  if (align === "center") return "lg:col-span-2";
+  if (layout === "two-first") return align === "left" ? "lg:order-last" : "";
+  return align === "right" ? "lg:order-first" : "";
+}
+
 /** The typography fields, in panel order: [headline…, text…]. */
-export const TYPE_KEYS = ["fontHeadline", "sizeHeadline", "weightHeadline", "leadingHeadline", "fontText", "sizeText", "weightText", "leadingText"] as const;
+export const TYPE_KEYS = ["fontHeadline", "fontAccent", "sizeHeadline", "weightHeadline", "leadingHeadline", "fontText", "sizeText", "weightText", "leadingText"] as const;
 
 /** CSS font-family stack for a choice, or undefined for "default". */
 export function fontStack(value: string | undefined): string | undefined {
@@ -83,7 +106,9 @@ export function blockTypeProps(t: BlockFonts): { style?: CSSProperties } & Recor
   const attrs: Record<string, string> = {};
   const display = fontStack(t.fontHeadline);
   const sans = fontStack(t.fontText);
+  const accent = fontStack(t.fontAccent);
   if (display) vars["--font-display"] = display;
+  if (accent) vars["--font-serif"] = accent;
   if (sans) vars["--font-sans"] = sans;
   const set = (value: string | undefined, name: string) => {
     if (!value) return;
@@ -96,5 +121,8 @@ export function blockTypeProps(t: BlockFonts): { style?: CSSProperties } & Recor
   set(t.sizeText, "tx-size");
   set(t.weightText, "tx-weight");
   set(t.leadingText, "tx-leading");
+  if (t.alignText) attrs["data-align-text"] = t.alignText;
+  if (t.alignButtons) attrs["data-align-buttons"] = t.alignButtons;
+  if (t.alignImage) attrs["data-align-image"] = t.alignImage;
   return { ...(Object.keys(vars).length ? { style: vars as CSSProperties } : {}), ...attrs };
 }

@@ -10,6 +10,7 @@ import Gallery from "@/components/sections/Gallery";
 import Events from "@/components/sections/Events";
 import Footer from "@/components/sections/Footer";
 import Marquee from "@/components/ui/Marquee";
+import Cart from "@/components/cart/Cart";
 import { blockTypeProps } from "@/lib/content/fonts";
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -25,6 +26,7 @@ export async function generateMetadata(): Promise<Metadata> {
 export default async function Home() {
   const c = await getContent();
   // Sort stops Monday → Sunday for the schedule and the map route.
+  const ordering = c.ordering.enabled === "yes";
   const stops = [...c.findTruck.stops].sort((a, b) => ((a.day + 6) % 7) - ((b.day + 6) % 7));
 
   return (
@@ -38,13 +40,14 @@ export default async function Home() {
           className="bg-cobalt-deep py-6 font-display text-4xl font-semibold uppercase tracking-tight text-cream sm:py-8 sm:text-6xl"
         />
         <Manifesto content={c.manifesto} />
-        <MenuSection content={c.menu} />
+        <MenuSection content={c.menu} order={ordering ? { addLabel: c.ordering.addLabel } : null} />
         <FindTruck content={{ ...c.findTruck, stops }} />
         <Story content={c.story} />
         <Gallery content={c.gallery} instagram={c.brand.instagram} />
         <Events content={c.events} />
       </main>
       <Footer content={c.footer} brand={c.brand} />
+      {ordering && <Cart ordering={c.ordering} menu={c.menu.categories} stops={c.findTruck.stops} />}
     </>
   );
 }

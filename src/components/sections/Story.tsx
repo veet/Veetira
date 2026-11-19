@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, MOTION_OK } from "@/lib/motion";
 import type { SiteContent } from "@/lib/content/types";
-import { blockTypeProps } from "@/lib/content/fonts";
+import { blockTypeProps, imageColumnClass } from "@/lib/content/fonts";
 import { richLines } from "@/components/ui/Rich";
 import { Bun, Cup, IcedCup, Mark } from "@/components/art/Food";
 import SplitReveal from "@/components/ui/SplitReveal";
@@ -48,7 +48,7 @@ export default function Story({ content }: { content: SiteContent["story"] }) {
       <div aria-hidden className="pointer-events-none absolute -right-40 top-20 h-[30rem] w-[30rem] rounded-full bg-amber/10 blur-[120px]" />
       <div className="mx-auto grid max-w-[1440px] gap-16 px-5 sm:px-8 lg:grid-cols-2 lg:gap-24">
         <div>
-          <p className="mb-5 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em] text-amber">
+          <p className="mb-5 eyebrow flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em] text-amber">
             <span className="h-px w-12 bg-amber" /> {content.eyebrow}
           </p>
           <SplitReveal
@@ -77,7 +77,7 @@ export default function Story({ content }: { content: SiteContent["story"] }) {
         </div>
 
         {/* Collage */}
-        <div className="relative grid grid-cols-2 gap-4 sm:gap-5">
+        <div className={`relative grid grid-cols-2 gap-4 sm:gap-5 ${imageColumnClass(content.alignImage, "two-second")}`}>
           <div className="story-tile relative col-span-2 grid aspect-[16/9] place-items-center overflow-hidden rounded-[2rem] bg-azure">
             <div className="story-art flex items-end gap-6">
               <Cup className="h-40 w-auto sm:h-56" />

@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { saveBlockAction, resetBlockAction } from "@/app/admin/actions";
 import { emptyItem, type BlockSchema, type Field } from "@/lib/content/schema";
-import { fontStack, TYPE_KEYS } from "@/lib/content/fonts";
+import { ALIGN_KEYS, fontStack, TYPE_KEYS } from "@/lib/content/fonts";
 import LocalDate from "./LocalDate";
 
 type Obj = Record<string, unknown>;
@@ -75,7 +75,7 @@ export default function BlockEditor({ schema, initial, updatedAt }: { schema: Bl
         }}
       >
         {schema.fields
-          .filter((f) => !(TYPE_KEYS as readonly string[]).includes(f.key))
+          .filter((f) => !([...TYPE_KEYS, ...ALIGN_KEYS] as readonly string[]).includes(f.key))
           .map((f) => (
             <FieldInput key={f.key} field={f} value={value[f.key]} onChange={(v) => setValue((o) => ({ ...o, [f.key]: v }))} path={f.key} />
           ))}
@@ -288,19 +288,21 @@ function ListInput({ field, value, onChange, path }: { field: Extract<Field, { t
 function TypographyPanel({ fields, value, onChange, navHint }: { fields: Field[]; value: Obj; onChange: (key: string, v: unknown) => void; navHint: boolean }) {
   const byKey = (k: string) => fields.find((f) => f.key === k);
   const groups = [
-    { title: "Headlines", hint: navHint ? "The menu links and the mobile menu." : "Big headings and display text.", keys: ["fontHeadline", "sizeHeadline", "weightHeadline", "leadingHeadline"], headline: true },
+    { title: "Headlines", hint: navHint ? "The menu links and the mobile menu." : "Big headings and display text.", keys: ["fontHeadline", "fontAccent", "sizeHeadline", "weightHeadline", "leadingHeadline"], headline: true },
     { title: "Text", hint: "Paragraphs, labels and buttons.", keys: ["fontText", "sizeText", "weightText", "leadingText"], headline: false },
   ];
 
   return (
     <section className="border-t border-ink/10 pt-6">
-      <h2 className="font-display text-xl font-semibold">Typography</h2>
+      <h2 className="font-display text-xl font-semibold">Typography &amp; layout</h2>
       <p className="mt-1 text-sm text-ink/60">
         For this section only{navHint ? " (here: the top navigation bar)" : ""}. “Default” keeps the design as it is. Size is relative to the normal size, so it still adapts to phones.
       </p>
       <div className="mt-5 grid gap-5">
         {groups.map((g) => {
-          const [fontK, sizeK, weightK, leadingK] = g.keys;
+          const fontK = g.keys[0];
+          const [sizeK, weightK, leadingK] = g.keys.slice(-3);
+          const accentK = g.headline ? "fontAccent" : "";
           return (
             <div key={g.title} className="rounded-2xl border border-ink/10 bg-[#f7f3ec]/70 p-4">
               <div className="flex items-baseline justify-between gap-3">
@@ -319,17 +321,32 @@ function TypographyPanel({ fields, value, onChange, navHint }: { fields: Field[]
                 size={String(value[sizeK] ?? "")}
                 weight={String(value[weightK] ?? "")}
                 leading={String(value[leadingK] ?? "")}
+                accent={accentK ? String(value[accentK] ?? "") : ""}
               />
             </div>
           );
         })}
+        {fields.some((f) => (ALIGN_KEYS as readonly string[]).includes(f.key)) && (
+          <div className="rounded-2xl border border-ink/10 bg-[#f7f3ec]/70 p-4">
+            <div className="flex items-baseline justify-between gap-3">
+              <h3 className="font-bold">Alignment</h3>
+              <p className="text-xs text-ink/50">Right is where Hebrew lines start.</p>
+            </div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              {ALIGN_KEYS.map((k) => {
+                const f = byKey(k);
+                return f ? <FieldInput key={k} field={f} value={value[k]} onChange={(v) => onChange(k, v)} path={k} /> : null;
+              })}
+            </div>
+          </div>
+        )}
       </div>
     </section>
   );
 }
 
 /** Live Hebrew sample of the chosen typography, so the admin sees it before saving. */
-function TypePreview({ headline, font, size, weight, leading }: { headline: boolean; font: string; size: string; weight: string; leading: string }) {
+function TypePreview({ headline, font, size, weight, leading, accent }: { headline: boolean; font: string; size: string; weight: string; leading: string; accent: string }) {
   const family = fontStack(font) ?? (headline ? "var(--font-hebrew), var(--font-heebo), sans-serif" : "var(--font-heebo), sans-serif");
   const base = headline ? 1.875 : 1; // rem: roughly a section headline vs. body text, scaled down to fit
   return (
@@ -349,7 +366,10 @@ function TypePreview({ headline, font, size, weight, leading }: { headline: bool
         <>
           חומרים פשוטים,
           <br />
-          טעם יוצא דופן
+          טעם{" "}
+          <span className="text-amber" style={{ fontFamily: fontStack(accent) ?? "var(--font-rubik), var(--font-heebo), sans-serif", fontWeight: 500 }}>
+            יוצא דופן.
+          </span>
         </>
       ) : (
         "אספרסו חד־זני, קולד ברו של 18 שעות ומאפים מהתנור של הבוקר. מוגש מטנדר כחול שמתייצב כל יום בפינה אחרת. ₪15"

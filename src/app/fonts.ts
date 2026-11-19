@@ -46,7 +46,8 @@ const frank = Frank_Ruhl_Libre({ variable: "--font-frank", subsets: ["hebrew", "
 /* Extra choices for the per-block font pickers in /admin (see src/lib/content/fonts.ts).
    Not preloaded: a browser only downloads one when a section uses it.
    (next/font needs literal options here, so they are written out for each font.) */
-const rubik = Rubik({ variable: "--font-rubik", subsets: ["hebrew", "latin"], preload: false, display: "swap" });
+// Rubik is the site-wide accent font (the highlighted words), so it is preloaded.
+const rubik = Rubik({ variable: "--font-rubik", subsets: ["hebrew", "latin"], display: "swap" });
 const assistant = Assistant({ variable: "--font-assistant", subsets: ["hebrew", "latin"], preload: false, display: "swap" });
 const varela = Varela_Round({ variable: "--font-varela", weight: "400", subsets: ["hebrew", "latin"], preload: false, display: "swap" });
 const secular = Secular_One({ variable: "--font-secular", weight: "400", subsets: ["hebrew", "latin"], preload: false, display: "swap" });

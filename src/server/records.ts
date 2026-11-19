@@ -71,6 +71,76 @@ export function deleteSubscriber(id: number) {
   db.prepare("DELETE FROM subscribers WHERE id = ?").run(id);
 }
 
+/* ---------- orders ---------- */
+
+export const ORDER_STATUSES = ["new", "preparing", "ready", "picked_up", "cancelled"] as const;
+export type OrderStatus = (typeof ORDER_STATUSES)[number];
+
+export type OrderItem = { name: string; price: number; qty: number };
+export type Order = {
+  id: number;
+  name: string;
+  phone: string;
+  pickup_date: string;
+  pickup_time: string;
+  location: string;
+  items: OrderItem[];
+  total: number;
+  payment: "bit" | "cash";
+  paid: boolean;
+  status: OrderStatus;
+  note: string;
+  created_at: string;
+};
+
+type NewOrder = Omit<Order, "id" | "paid" | "status" | "created_at">;
+
+export function createOrder(o: NewOrder): number {
+  const res = db
+    .prepare("INSERT INTO orders (name, phone, pickup_date, pickup_time, location, items, total, payment, note) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)")
+    .run(o.name, o.phone, o.pickup_date, o.pickup_time, o.location, JSON.stringify(o.items), o.total, o.payment, o.note);
+  return Number(res.lastInsertRowid);
+}
+
+const toOrder = (r: Record<string, unknown>): Order => {
+  let items: OrderItem[] = [];
+  try {
+    items = JSON.parse(String(r.items));
+  } catch {}
+  return { ...(r as unknown as Order), items, paid: Boolean(r.paid) };
+};
+
+/** Active orders (new / preparing / ready) first by pickup time; the rest newest first. */
+export function listOrders(status?: OrderStatus): Order[] {
+  const rows = status
+    ? db.prepare("SELECT * FROM orders WHERE status = ? ORDER BY pickup_date, pickup_time, id").all(status)
+    : db
+        .prepare(
+          "SELECT * FROM orders ORDER BY CASE WHEN status IN ('new','preparing','ready') THEN 0 ELSE 1 END, CASE WHEN status IN ('new','preparing','ready') THEN pickup_date || ' ' || pickup_time END, created_at DESC, id DESC"
+        )
+        .all();
+  return rows.map((r) => toOrder({ ...r }));
+}
+
+export function updateOrder(id: number, patch: { status?: OrderStatus; paid?: boolean }) {
+  if (patch.status) db.prepare("UPDATE orders SET status = ? WHERE id = ?").run(patch.status, id);
+  if (patch.paid !== undefined) db.prepare("UPDATE orders SET paid = ? WHERE id = ?").run(patch.paid ? 1 : 0, id);
+}
+
+export function deleteOrder(id: number) {
+  db.prepare("DELETE FROM orders WHERE id = ?").run(id);
+}
+
+export function orderCounts(): Record<OrderStatus | "all" | "unpaid", number> {
+  const out = { all: 0, unpaid: 0, new: 0, preparing: 0, ready: 0, picked_up: 0, cancelled: 0 };
+  for (const r of db.prepare("SELECT status, paid, COUNT(*) AS n FROM orders GROUP BY status, paid").all() as { status: OrderStatus; paid: number; n: number }[]) {
+    out[r.status] += r.n;
+    out.all += r.n;
+    if (!r.paid && r.status !== "cancelled") out.unpaid += r.n;
+  }
+  return out;
+}
+
 /* ---------- CSV ---------- */
 
 export function toCsv(rows: Record<string, unknown>[], columns: string[]) {

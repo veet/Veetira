@@ -50,9 +50,24 @@ type Content = {
     successBody: string;
   };
   footer: { headline: string; hoursTitle: string; hoursLine: string; newsletterTitle: string; newsletterBody: string; bottomLine: string };
+  ordering: {
+    enabled: "yes" | "no";
+    title: string;
+    intro: string;
+    addLabel: string;
+    pickupNote: string;
+    leadMinutes: number;
+    slotMinutes: number;
+    bitPhone: string;
+    bitLink: string;
+    bitNote: string;
+    cashNote: string;
+    successTitle: string;
+    successBody: string;
+  };
 };
 
 /** Every visible block also carries its own font choices (picked in /admin). */
-export type SiteContent = { [K in keyof Content]: K extends "seo" ? Content[K] : Content[K] & BlockFonts };
+export type SiteContent = { [K in keyof Content]: K extends "seo" | "ordering" ? Content[K] : Content[K] & BlockFonts };
 
 export type BlockKey = keyof SiteContent;

@@ -62,7 +62,7 @@ export default function Events({ content }: { content: SiteContent["events"] }) 
       <div aria-hidden className="pointer-events-none absolute -bottom-40 -left-40 h-[36rem] w-[36rem] rounded-full bg-azure/50 blur-[140px]" />
       <div className="relative mx-auto grid max-w-[1440px] gap-16 px-5 sm:px-8 lg:grid-cols-[1fr_1.1fr] lg:gap-24">
         <div>
-          <p className="mb-5 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em] text-amber">
+          <p className="mb-5 eyebrow flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em] text-amber">
             <span className="h-px w-12 bg-amber" /> {content.eyebrow}
           </p>
           <SplitReveal className="font-display text-[clamp(3rem,6.5vw,6.5rem)] font-semibold leading-[0.9] tracking-[-0.035em]" lines={richLines(content.headline)} />
@@ -162,7 +162,7 @@ export default function Events({ content }: { content: SiteContent["events"] }) 
                     {formError}
                   </p>
                 )}
-                <div>
+                <div className="btn-row">
                   <Magnetic type="submit" cursor="שליחה" className="rounded-full bg-cream px-8 py-4 text-sm font-bold text-cobalt transition-colors hover:bg-amber">
                     {sending ? "שולחים…" : content.submitLabel}
                   </Magnetic>

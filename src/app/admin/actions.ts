@@ -5,7 +5,17 @@ import { redirect } from "next/navigation";
 import { refresh, updateTag } from "next/cache";
 import { checkPassword, endSession, requireAdmin, startSession } from "@/server/auth";
 import { CONTENT_TAG, resetBlock, saveBlock } from "@/server/content";
-import { BOOKING_STATUSES, deleteBooking, deleteSubscriber, updateBooking, type BookingStatus } from "@/server/records";
+import {
+  BOOKING_STATUSES,
+  ORDER_STATUSES,
+  deleteBooking,
+  deleteOrder,
+  deleteSubscriber,
+  updateBooking,
+  updateOrder,
+  type BookingStatus,
+  type OrderStatus,
+} from "@/server/records";
 import { clientIp, rateLimit } from "@/server/rateLimit";
 import { schemaFor } from "@/lib/content/schema";
 import type { BlockKey } from "@/lib/content/types";
@@ -78,5 +88,26 @@ export async function removeBooking(id: number) {
 export async function removeSubscriber(id: number) {
   await requireAdmin();
   deleteSubscriber(Number(id));
+  refresh();
+}
+
+/* ---------- orders ---------- */
+
+export async function setOrderStatus(id: number, status: string) {
+  await requireAdmin();
+  if (!ORDER_STATUSES.includes(status as OrderStatus)) return;
+  updateOrder(Number(id), { status: status as OrderStatus });
+  refresh();
+}
+
+export async function setOrderPaid(id: number, paid: boolean) {
+  await requireAdmin();
+  updateOrder(Number(id), { paid: Boolean(paid) });
+  refresh();
+}
+
+export async function removeOrder(id: number) {
+  await requireAdmin();
+  deleteOrder(Number(id));
   refresh();
 }

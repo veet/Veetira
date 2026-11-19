@@ -15,7 +15,7 @@
   /* The public site is Hebrew, so Hebrew fonts come first (they include Latin letters and digits too). */
   --font-sans: var(--font-heebo), var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
   --font-display: var(--font-hebrew), var(--font-clash), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-frank), var(--font-instrument), ui-serif, Georgia, serif;
+  --font-serif: var(--font-rubik), var(--font-heebo), ui-sans-serif, system-ui, sans-serif; /* accent words */
 
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -83,6 +83,45 @@ html[lang="he"] .uppercase:not(.admin-ltr .uppercase) {
 }
 [data-tx-leading] :is(p, li, label, button, a, dd, dt, figcaption, legend, textarea):not(.font-display, .font-display *) {
   line-height: var(--tx-leading);
+}
+
+/*
+ * Per-block alignment from /admin. "right" is where right-to-left lines start, so it maps to
+ * flex-start / justify-items: start. Marker classes in the sections: .eyebrow (label rows),
+ * .btn-row (button groups), .img-align (picture inside a card or tile).
+ */
+[data-align-text="right"] { --ta: right; --jc: flex-start; }
+[data-align-text="center"] { --ta: center; --jc: center; }
+[data-align-text="left"] { --ta: left; --jc: flex-end; }
+[data-align-text] :is(h1, h2, h3, p, li, dd, dt, figcaption, legend) {
+  text-align: var(--ta);
+}
+[data-align-text] .eyebrow {
+  justify-content: var(--jc);
+}
+[data-align-text="center"] :is(h2, p)[class*="max-w-"] {
+  margin-inline: auto;
+}
+[data-align-text="left"] :is(h2, p)[class*="max-w-"] {
+  margin-inline-start: auto;
+  margin-inline-end: 0;
+}
+
+[data-align-buttons="right"] { --jb: flex-start; }
+[data-align-buttons="center"] { --jb: center; }
+[data-align-buttons="left"] { --jb: flex-end; }
+[data-align-buttons] .btn-row {
+  display: flex;
+  align-self: stretch;
+  justify-content: var(--jb);
+}
+
+[data-align-image="right"] { --ji: start; }
+[data-align-image="center"] { --ji: center; }
+[data-align-image="left"] { --ji: end; }
+[data-align-image] .img-align {
+  justify-items: var(--ji);
+  padding-inline: 1.5rem;
 }
 
 /* The admin stays English and left-to-right, with the original Latin fonts. */

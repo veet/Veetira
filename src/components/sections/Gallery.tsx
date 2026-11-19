@@ -51,7 +51,7 @@ export default function Gallery({ content, instagram }: { content: SiteContent["
           className="font-display text-[clamp(3rem,7vw,7rem)] font-semibold leading-[0.9] tracking-[-0.035em]"
           lines={richLines(content.headline, "text-cobalt")}
         />
-        <p className="flex items-center gap-3 text-sm font-medium text-ink/60">
+        <p className="eyebrow flex items-center gap-3 text-sm font-medium text-ink/60">
           <span className="inline-block h-px w-10 bg-ink/40" /> {content.hint} · <bdi>{instagram}</bdi>
         </p>
       </div>
@@ -76,7 +76,7 @@ export default function Gallery({ content, instagram }: { content: SiteContent["
                 transition={{ duration: 1, delay: i * 0.06, ease: [0.16, 1, 0.3, 1] }}
                 className={`group relative shrink-0 select-none overflow-hidden rounded-[2rem] ${t.bg} ${t.w} ${t.h}`}
               >
-                <div className="grid h-full place-items-center">
+                <div className="img-align grid h-full place-items-center">
                   <Art className="pointer-events-none h-1/2 w-auto transition-transform duration-1000 ease-expo group-hover:scale-110 group-hover:-rotate-3" />
                 </div>
                 <figcaption className="absolute inset-x-4 bottom-4 flex items-center justify-between rounded-full bg-cream/90 px-4 py-2 text-xs font-bold text-ink backdrop-blur">

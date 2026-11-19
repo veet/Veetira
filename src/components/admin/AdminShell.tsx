@@ -7,6 +7,7 @@ import Logotype from "@/components/art/Logotype";
 type Props = {
   tab: string;
   blockKey: string;
+  newOrders: number;
   newBookings: number;
   subscriberCount: number;
   emailOn: boolean;
@@ -16,7 +17,7 @@ type Props = {
 const item = (active: boolean) =>
   `flex items-center justify-between rounded-xl px-3 py-2 text-sm transition ${active ? "bg-cream font-bold text-cobalt" : "text-cream/80 hover:bg-cream/10 hover:text-cream"}`;
 
-export default function AdminShell({ tab, blockKey, newBookings, subscriberCount, emailOn, children }: Props) {
+export default function AdminShell({ tab, blockKey, newOrders, newBookings, subscriberCount, emailOn, children }: Props) {
   return (
     <div className="min-h-screen bg-[#f7f3ec] text-ink lg:grid lg:grid-cols-[272px_1fr]">
       <aside className="bg-cobalt text-cream lg:sticky lg:top-0 lg:h-screen lg:overflow-y-auto">
@@ -30,6 +31,10 @@ export default function AdminShell({ tab, blockKey, newBookings, subscriberCount
         <nav className="space-y-6 px-3 pb-6">
           <div>
             <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.25em] text-cream/45">Inbox</p>
+            <Link href="/admin?tab=orders" className={item(tab === "orders")}>
+              Orders
+              {newOrders > 0 && <span className="rounded-full bg-amber px-2 py-0.5 text-xs font-bold text-ink">{newOrders} new</span>}
+            </Link>
             <Link href="/admin?tab=bookings" className={item(tab === "bookings")}>
               Event bookings
               {newBookings > 0 && <span className="rounded-full bg-amber px-2 py-0.5 text-xs font-bold text-ink">{newBookings} new</span>}
