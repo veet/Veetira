@@ -4,6 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, MOTION_OK } from "@/lib/motion";
 import type { SiteContent } from "@/lib/content/types";
+import { blockFontStyle } from "@/lib/content/fonts";
 import { richLines } from "@/components/ui/Rich";
 import { Bun, Cup, IcedCup, Mark } from "@/components/art/Food";
 import SplitReveal from "@/components/ui/SplitReveal";
@@ -43,7 +44,7 @@ export default function Story({ content }: { content: SiteContent["story"] }) {
   );
 
   return (
-    <section ref={root} id="story" className="relative overflow-hidden bg-cobalt-deep py-28 text-cream sm:py-40">
+    <section ref={root} id="story" style={blockFontStyle(content)} className="relative overflow-hidden bg-cobalt-deep py-28 font-sans text-cream sm:py-40">
       <div aria-hidden className="pointer-events-none absolute -right-40 top-20 h-[30rem] w-[30rem] rounded-full bg-amber/10 blur-[120px]" />
       <div className="mx-auto grid max-w-[1440px] gap-16 px-5 sm:px-8 lg:grid-cols-2 lg:gap-24">
         <div>
@@ -101,7 +102,7 @@ export default function Story({ content }: { content: SiteContent["story"] }) {
               </defs>
               {/* direction="ltr": right-to-left text on a path runs backwards off the circle in browsers.
                   Letters within each Hebrew word still come out in the right order. */}
-              <text direction="ltr" textLength={234} lengthAdjust="spacing" fontSize="10.5" fontWeight="700" fill="currentColor" fontFamily="var(--font-heebo)">
+              <text direction="ltr" textLength={234} lengthAdjust="spacing" fontSize="10.5" fontWeight="700" fill="currentColor" fontFamily="var(--font-sans)">
                 <textPath href="#circ">{content.badge}</textPath>
               </text>
             </svg>

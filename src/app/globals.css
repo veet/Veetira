@@ -48,6 +48,11 @@ body {
   overflow-x: clip;
 }
 
+/* Some per-block font choices come in a single weight; use it as designed instead of a smeared fake bold. */
+html[lang="he"] {
+  font-synthesis-weight: none;
+}
+
 /* Wide tracking suits Latin capitals but pulls Hebrew words apart, so the site's small "uppercase"
    labels get a light tracking instead. Unlayered, so it wins over the tracking-* utilities. */
 html[lang="he"] .uppercase:not(.admin-ltr .uppercase) {

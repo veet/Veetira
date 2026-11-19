@@ -10,6 +10,7 @@ import Gallery from "@/components/sections/Gallery";
 import Events from "@/components/sections/Events";
 import Footer from "@/components/sections/Footer";
 import Marquee from "@/components/ui/Marquee";
+import { blockFontStyle } from "@/lib/content/fonts";
 
 export async function generateMetadata(): Promise<Metadata> {
   const { seo } = await getContent();
@@ -33,6 +34,7 @@ export default async function Home() {
         <Hero content={c.hero} />
         <Marquee
           words={c.marquee.words.map((w) => w.text).filter(Boolean)}
+          style={blockFontStyle(c.marquee)}
           className="bg-cobalt-deep py-6 font-display text-4xl font-semibold uppercase tracking-tight text-cream sm:py-8 sm:text-6xl"
         />
         <Manifesto content={c.manifesto} />

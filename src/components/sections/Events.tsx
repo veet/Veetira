@@ -8,6 +8,7 @@ import { Cup } from "@/components/art/Food";
 import { rich, richLines } from "@/components/ui/Rich";
 import { parseBooking, type BookingErrors } from "@/lib/validation";
 import type { SiteContent } from "@/lib/content/types";
+import { blockFontStyle } from "@/lib/content/fonts";
 
 const field =
   "peer w-full border-b border-cream/30 bg-transparent pb-3 pt-6 text-lg text-cream outline-none transition-colors placeholder:text-transparent focus:border-amber";
@@ -57,7 +58,7 @@ export default function Events({ content }: { content: SiteContent["events"] }) 
     ) : null;
 
   return (
-    <section id="events" className="relative overflow-hidden bg-cobalt py-28 text-cream sm:py-40">
+    <section id="events" style={blockFontStyle(content)} className="relative overflow-hidden bg-cobalt py-28 font-sans text-cream sm:py-40">
       <div aria-hidden className="pointer-events-none absolute -bottom-40 -left-40 h-[36rem] w-[36rem] rounded-full bg-azure/50 blur-[140px]" />
       <div className="relative mx-auto grid max-w-[1440px] gap-16 px-5 sm:px-8 lg:grid-cols-[1fr_1.1fr] lg:gap-24">
         <div>

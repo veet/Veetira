@@ -4,6 +4,7 @@
  */
 import type { BlockKey, SiteContent } from "./types";
 import { defaults } from "./defaults";
+import { FONT_OPTIONS } from "./fonts";
 
 type Base = { key: string; label: string; help?: string };
 export type Field =
@@ -11,7 +12,7 @@ export type Field =
   | (Base & { type: "textarea"; max?: number; rows?: number })
   | (Base & { type: "number"; min?: number; max?: number; step?: number })
   | (Base & { type: "time" })
-  | (Base & { type: "select"; options: { value: string | number; label: string }[] })
+  | (Base & { type: "select"; options: { value: string | number; label: string }[]; preview?: "font" })
   | (Base & { type: "list"; itemLabel: string; titleKey?: string; fields: Field[]; max?: number });
 
 export type BlockSchema = { key: BlockKey; title: string; description: string; fields: Field[] };
@@ -20,7 +21,7 @@ const ART = ["cup", "iced", "croissant", "cookie", "cake", "bun", "burrito"].map
 const ACCENT_HELP = "Wrap a word in *asterisks* for the italic accent. Each new line animates separately.";
 const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-export const blockSchemas: BlockSchema[] = [
+const contentSchemas: BlockSchema[] = [
   {
     key: "brand",
     title: "Brand & contact",
@@ -220,6 +221,30 @@ export const blockSchemas: BlockSchema[] = [
     ],
   },
 ];
+
+/* ---------- per-block fonts ---------- */
+
+const FONT_CHOICES = [{ value: "", label: "Default" }, ...FONT_OPTIONS.map((o) => ({ value: o.value, label: o.label }))];
+
+/** Blocks that are visible on the page get a headline-font and a text-font picker. */
+const FONT_HELP: Partial<Record<BlockKey, string>> = {
+  brand: "Applies to the top navigation bar and the mobile menu.",
+};
+const NO_FONTS: BlockKey[] = ["seo"];
+
+const fontFields = (key: BlockKey): Field[] => [
+  {
+    key: "fontHeadline",
+    label: "Headline font",
+    type: "select",
+    preview: "font",
+    options: FONT_CHOICES,
+    help: FONT_HELP[key] ?? "Big headings and display text in this section. Default is Fredoka.",
+  },
+  { key: "fontText", label: "Text font", type: "select", preview: "font", options: FONT_CHOICES, help: "Paragraphs, labels and buttons. Default is Heebo." },
+];
+
+export const blockSchemas: BlockSchema[] = contentSchemas.map((s) => (NO_FONTS.includes(s.key) ? s : { ...s, fields: [...s.fields, ...fontFields(s.key)] }));
 
 export const schemaFor = (key: string) => blockSchemas.find((b) => b.key === key);
 

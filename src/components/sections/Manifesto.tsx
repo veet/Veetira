@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react";
 import { gsap, MOTION_OK } from "@/lib/motion";
 import { Cookie, Croissant, Cup } from "@/components/art/Food";
 import type { SiteContent } from "@/lib/content/types";
+import { blockFontStyle } from "@/lib/content/fonts";
 
 type Token = string | { pill: "cup" | "croissant" | "cookie" };
 
@@ -57,7 +58,7 @@ export default function Manifesto({ content }: { content: SiteContent["manifesto
   );
 
   return (
-    <section ref={root} className="bg-cream py-28 sm:py-40">
+    <section ref={root} style={blockFontStyle(content)} className="bg-cream py-28 font-sans sm:py-40">
       <div className="mx-auto max-w-[1440px] px-5 sm:px-8">
         <div className="mb-12 flex items-center gap-4 text-xs font-bold uppercase tracking-[0.3em] text-cobalt">
           <span className="h-px w-12 bg-cobalt" /> {content.eyebrow}

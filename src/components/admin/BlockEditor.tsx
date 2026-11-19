@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState, useTransition } from "react";
 import { saveBlockAction, resetBlockAction } from "@/app/admin/actions";
 import { emptyItem, type BlockSchema, type Field } from "@/lib/content/schema";
+import { fontStack } from "@/lib/content/fonts";
 import LocalDate from "./LocalDate";
 
 type Obj = Record<string, unknown>;
@@ -74,7 +75,15 @@ export default function BlockEditor({ schema, initial, updatedAt }: { schema: Bl
         }}
       >
         {schema.fields.map((f) => (
-          <FieldInput key={f.key} field={f} value={value[f.key]} onChange={(v) => setValue((o) => ({ ...o, [f.key]: v }))} path={f.key} />
+          <div key={f.key}>
+            {f.key === "fontHeadline" && (
+              <div className="mb-5 border-t border-ink/10 pt-6">
+                <h2 className="font-display text-xl font-semibold">Fonts</h2>
+                <p className="mt-1 text-sm text-ink/60">Pick fonts for this section only. “Default” keeps the site-wide fonts.</p>
+              </div>
+            )}
+            <FieldInput field={f} value={value[f.key]} onChange={(v) => setValue((o) => ({ ...o, [f.key]: v }))} path={f.key} />
+          </div>
         ))}
 
         <div className="sticky bottom-4 z-10 -mx-2 flex flex-wrap items-center gap-3 rounded-2xl bg-ink/90 p-3 text-cream shadow-xl backdrop-blur sm:-mx-3">
@@ -165,6 +174,7 @@ function FieldInput({ field, value, onChange, path }: { field: Field; value: unk
               </option>
             ))}
           </select>
+          {field.preview === "font" && <FontPreview value={String(value ?? "")} headline={field.key === "fontHeadline"} />}
           {help}
         </div>
       );
@@ -270,5 +280,20 @@ function ListInput({ field, value, onChange, path }: { field: Extract<Field, { t
         + Add {field.itemLabel.toLowerCase()}
       </button>
     </fieldset>
+  );
+}
+
+/** Live sample of a font choice, in Hebrew, so the admin can see it before saving. */
+function FontPreview({ value, headline }: { value: string; headline: boolean }) {
+  const family = fontStack(value) ?? (headline ? "var(--font-hebrew), var(--font-heebo), sans-serif" : "var(--font-heebo), sans-serif");
+  return (
+    <p
+      dir="rtl"
+      lang="he"
+      className={`mt-2 rounded-xl bg-cobalt px-4 py-3 text-cream ${headline ? "text-3xl font-semibold leading-tight" : "text-base"}`}
+      style={{ fontFamily: family }}
+    >
+      {headline ? "חומרים פשוטים, טעם יוצא דופן" : "אספרסו חד־זני, קולד ברו של 18 שעות ומאפים מהתנור של הבוקר. ₪15"}
+    </p>
   );
 }

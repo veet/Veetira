@@ -6,6 +6,7 @@ import { ScrollTrigger, getLenis, onIntroDone, gsap } from "@/lib/motion";
 import { getStatus, useNow } from "@/lib/time";
 import Logotype from "@/components/art/Logotype";
 import type { SiteContent, Stop } from "@/lib/content/types";
+import { blockFontStyle } from "@/lib/content/fonts";
 
 const links = [
   { href: "#menu", label: "תפריט" },
@@ -50,7 +51,8 @@ export default function Nav({ brand, stops }: { brand: SiteContent["brand"]; sto
     <>
       <header
         ref={bar}
-        className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${solid && !open ? "bg-cobalt/80 backdrop-blur-xl" : ""}`}
+        style={blockFontStyle(brand)}
+        className={`fixed inset-x-0 top-0 z-50 font-sans transition-colors duration-500 ${solid && !open ? "bg-cobalt/80 backdrop-blur-xl" : ""}`}
       >
         <nav className="mx-auto flex h-18 max-w-[1440px] items-center justify-between px-5 text-cream sm:px-8">
           <a href="#top" className="flex items-center" aria-label={`${brand.name} — דף הבית`}>
@@ -97,11 +99,12 @@ export default function Nav({ brand, stops }: { brand: SiteContent["brand"]; sto
         {open && (
           <motion.div
             id="mobile-menu"
+            style={blockFontStyle(brand)}
             initial={{ clipPath: "circle(0% at 0% 0%)" }}
             animate={{ clipPath: "circle(150% at 0% 0%)" }}
             exit={{ clipPath: "circle(0% at 0% 0%)" }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-40 flex flex-col justify-between bg-cobalt px-6 pb-10 pt-28 text-cream lg:hidden"
+            className="fixed inset-0 z-40 flex flex-col justify-between bg-cobalt px-6 pb-10 pt-28 font-sans text-cream lg:hidden"
           >
             <ul className="space-y-1">
               {links.map((l, i) => (

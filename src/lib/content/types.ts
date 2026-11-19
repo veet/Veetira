@@ -1,5 +1,7 @@
 /* Shape of every editable block on the site. Defaults live in ./defaults.ts, the admin form schema in ./schema.ts. */
 
+import type { BlockFonts } from "./fonts";
+
 export type Art = "cup" | "iced" | "croissant" | "cookie" | "cake" | "bun" | "burrito";
 export type Tag = "" | "Signature" | "Vegan";
 export type TileColor = "cobalt" | "amber" | "deep" | "foam" | "azure" | "latte" | "velvet";
@@ -17,7 +19,7 @@ export type Stop = {
   y: number; // % of height
 };
 
-export type SiteContent = {
+type Content = {
   brand: { name: string; email: string; phone: string; instagram: string; instagramUrl: string; tiktokUrl: string; googleUrl: string };
   seo: { title: string; description: string };
   hero: { eyebrow: string; headline: string; chips: { label: string }[]; intro: string; primaryCta: string; secondaryCta: string };
@@ -49,5 +51,8 @@ export type SiteContent = {
   };
   footer: { headline: string; hoursTitle: string; hoursLine: string; newsletterTitle: string; newsletterBody: string; bottomLine: string };
 };
+
+/** Every visible block also carries its own font choices (picked in /admin). */
+export type SiteContent = { [K in keyof Content]: K extends "seo" ? Content[K] : Content[K] & BlockFonts };
 
 export type BlockKey = keyof SiteContent;

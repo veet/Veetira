@@ -8,6 +8,7 @@ import Logotype from "@/components/art/Logotype";
 import { richLines } from "@/components/ui/Rich";
 import { EMAIL_RE } from "@/lib/validation";
 import type { SiteContent } from "@/lib/content/types";
+import { blockFontStyle } from "@/lib/content/fonts";
 
 /**
  * Sticky-reveal footer: the outer box clips a fixed inner panel, so the footer looks like it is
@@ -21,7 +22,7 @@ export default function Footer({ content, brand }: { content: SiteContent["foote
   ].filter((s) => s.href);
 
   return (
-    <footer className="relative h-[100svh] min-h-[720px]" style={{ clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}>
+    <footer className="relative h-[100svh] min-h-[720px] font-sans" style={{ ...blockFontStyle(content), clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)" }}>
       <div className="fixed bottom-0 left-0 flex h-[100svh] min-h-[720px] w-full flex-col justify-between overflow-hidden bg-cobalt-deep text-cream">
         <div aria-hidden className="pointer-events-none absolute -top-40 left-1/2 h-[30rem] w-[50rem] -translate-x-1/2 rounded-full bg-amber/10 blur-[140px]" />
         <div className="relative mx-auto grid w-full max-w-[1440px] gap-10 px-5 pt-20 sm:grid-cols-2 sm:px-8 lg:grid-cols-[1.4fr_1fr_1fr_auto] lg:pt-28">
