@@ -8,10 +8,10 @@ import Logotype from "@/components/art/Logotype";
 import type { SiteContent, Stop } from "@/lib/content/types";
 
 const links = [
-  { href: "#menu", label: "Menu" },
-  { href: "#find-us", label: "Find us" },
-  { href: "#story", label: "Story" },
-  { href: "#events", label: "Events" },
+  { href: "#menu", label: "תפריט" },
+  { href: "#find-us", label: "איפה אנחנו" },
+  { href: "#story", label: "הסיפור" },
+  { href: "#events", label: "אירועים" },
 ];
 
 export default function Nav({ brand, stops }: { brand: SiteContent["brand"]; stops: Stop[] }) {
@@ -53,7 +53,7 @@ export default function Nav({ brand, stops }: { brand: SiteContent["brand"]; sto
         className={`fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${solid && !open ? "bg-cobalt/80 backdrop-blur-xl" : ""}`}
       >
         <nav className="mx-auto flex h-18 max-w-[1440px] items-center justify-between px-5 text-cream sm:px-8">
-          <a href="#top" className="flex items-center" aria-label={`${brand.name} — home`}>
+          <a href="#top" className="flex items-center" aria-label={`${brand.name} — דף הבית`}>
             <Logotype className="h-7 w-auto sm:h-8" color="#f4eee4" accent="#f2b65a" title={brand.name} />
           </a>
 
@@ -62,7 +62,7 @@ export default function Nav({ brand, stops }: { brand: SiteContent["brand"]; sto
               <li key={l.href}>
                 <a href={l.href} className="group relative py-1">
                   {l.label}
-                  <span className="absolute inset-x-0 -bottom-0.5 h-px origin-right scale-x-0 bg-cream transition-transform duration-500 ease-expo group-hover:origin-left group-hover:scale-x-100" />
+                  <span className="absolute inset-x-0 -bottom-0.5 h-px origin-left scale-x-0 bg-cream transition-transform duration-500 ease-expo group-hover:origin-right group-hover:scale-x-100" />
                 </a>
               </li>
             ))}
@@ -71,17 +71,17 @@ export default function Nav({ brand, stops }: { brand: SiteContent["brand"]; sto
           <div className="flex items-center gap-3">
             <a
               href="#find-us"
-              className="hidden items-center gap-2.5 rounded-full border border-cream/25 bg-cream/5 py-2 pl-3 pr-4 text-xs font-medium backdrop-blur sm:flex"
+              className="hidden items-center gap-2.5 rounded-full border border-cream/25 bg-cream/5 py-2 ps-3 pe-4 text-xs font-medium backdrop-blur sm:flex"
             >
               <span className={`h-2 w-2 rounded-full ${status?.isOpen ? "animate-pulse-amber bg-amber" : "bg-cream/40"}`} />
-              {status ? status.label : "Checking the truck…"}
+              {status ? status.label : "בודקים איפה הטנדר…"}
             </a>
             <button
               type="button"
               onClick={() => setOpen((o) => !o)}
               aria-expanded={open}
               aria-controls="mobile-menu"
-              aria-label={open ? "Close menu" : "Open menu"}
+              aria-label={open ? "סגירת התפריט" : "פתיחת התפריט"}
               className="relative z-10 grid h-11 w-11 place-items-center rounded-full bg-cream text-cobalt lg:hidden"
             >
               <span className="relative block h-3 w-5">
@@ -97,9 +97,9 @@ export default function Nav({ brand, stops }: { brand: SiteContent["brand"]; sto
         {open && (
           <motion.div
             id="mobile-menu"
-            initial={{ clipPath: "circle(0% at 100% 0%)" }}
-            animate={{ clipPath: "circle(150% at 100% 0%)" }}
-            exit={{ clipPath: "circle(0% at 100% 0%)" }}
+            initial={{ clipPath: "circle(0% at 0% 0%)" }}
+            animate={{ clipPath: "circle(150% at 0% 0%)" }}
+            exit={{ clipPath: "circle(0% at 0% 0%)" }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
             className="fixed inset-0 z-40 flex flex-col justify-between bg-cobalt px-6 pb-10 pt-28 text-cream lg:hidden"
           >

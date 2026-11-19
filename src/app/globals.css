@@ -12,9 +12,10 @@
   --color-velvet: #a8262f;
   --color-amber: #f2b65a;
 
-  --font-sans: var(--font-satoshi), var(--font-hebrew), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-clash), var(--font-hebrew), ui-sans-serif, system-ui, sans-serif;
-  --font-serif: var(--font-instrument), ui-serif, Georgia, serif;
+  /* The public site is Hebrew, so Hebrew fonts come first (they include Latin letters and digits too). */
+  --font-sans: var(--font-heebo), var(--font-satoshi), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-hebrew), var(--font-clash), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-frank), var(--font-instrument), ui-serif, Georgia, serif;
 
   --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
@@ -45,6 +46,19 @@ body {
   background: var(--color-cream);
   color: var(--color-ink);
   overflow-x: clip;
+}
+
+/* Wide tracking suits Latin capitals but pulls Hebrew words apart, so the site's small "uppercase"
+   labels get a light tracking instead. Unlayered, so it wins over the tracking-* utilities. */
+html[lang="he"] .uppercase:not(.admin-ltr .uppercase) {
+  letter-spacing: 0.06em;
+}
+
+/* The admin stays English and left-to-right, with the original Latin fonts. */
+.admin-ltr {
+  --font-sans: var(--font-satoshi), var(--font-heebo), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-clash), var(--font-hebrew), ui-sans-serif, system-ui, sans-serif;
+  --font-serif: var(--font-instrument), var(--font-frank), ui-serif, Georgia, serif;
 }
 
 ::selection {

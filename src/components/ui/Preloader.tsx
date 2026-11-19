@@ -80,7 +80,7 @@ export default function Preloader() {
           {count}
           <span className="text-azure">%</span>
         </p>
-        <p className="mt-3 text-xs uppercase tracking-[0.35em] text-cream/50">Brewing something good</p>
+        <p className="mt-3 text-xs uppercase tracking-[0.2em] text-cream/50">מכינים משהו טוב</p>
       </div>
     </div>
   );

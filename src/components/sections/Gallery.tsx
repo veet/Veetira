@@ -51,15 +51,15 @@ export default function Gallery({ content, instagram }: { content: SiteContent["
           lines={richLines(content.headline, "text-cobalt")}
         />
         <p className="flex items-center gap-3 text-sm font-medium text-ink/60">
-          <span className="inline-block h-px w-10 bg-ink/40" /> {content.hint} · {instagram}
+          <span className="inline-block h-px w-10 bg-ink/40" /> {content.hint} · <bdi>{instagram}</bdi>
         </p>
       </div>
 
-      <div ref={wrap} className="px-5 sm:px-8" data-cursor="Drag">
+      <div ref={wrap} className="px-5 sm:px-8" data-cursor="גררו">
         <motion.div
           ref={strip}
           drag="x"
-          dragConstraints={{ left: -limit, right: 0 }}
+          dragConstraints={{ left: 0, right: limit }}
           dragElastic={0.12}
           dragTransition={{ power: 0.25, timeConstant: 300 }}
           className="flex w-max touch-pan-y items-center gap-5 active:cursor-grabbing"

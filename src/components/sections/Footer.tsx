@@ -36,7 +36,7 @@ export default function Footer({ content, brand }: { content: SiteContent["foote
             <Newsletter title={content.newsletterTitle} body={content.newsletterBody} />
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-cream/40">Contact</p>
+            <p className="text-xs font-bold uppercase tracking-[0.15em] text-cream/40">יצירת קשר</p>
             <ul className="mt-4 space-y-2 text-cream/85">
               <li>
                 <a href={`mailto:${brand.email}`} className="hover:text-amber">
@@ -44,15 +44,15 @@ export default function Footer({ content, brand }: { content: SiteContent["foote
                 </a>
               </li>
               <li>
-                <a href={`tel:${brand.phone.replace(/[^\d+]/g, "")}`} className="hover:text-amber">
+                <a href={`tel:${brand.phone.replace(/[^\d+]/g, "")}`} className="hover:text-amber" dir="ltr">
                   {brand.phone}
                 </a>
               </li>
-              <li className="text-cream/60">{brand.instagram}</li>
+              <li className="text-cream/60"><bdi>{brand.instagram}</bdi></li>
             </ul>
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.25em] text-cream/40">Hours</p>
+            <p className="text-xs font-bold uppercase tracking-[0.15em] text-cream/40">שעות</p>
             <ul className="mt-4 space-y-2 text-cream/85">
               <li>{content.hoursTitle}</li>
               <li>{content.hoursLine}</li>
@@ -66,7 +66,7 @@ export default function Footer({ content, brand }: { content: SiteContent["foote
             </ul>
           </div>
           <div className="hidden lg:block">
-            <Magnetic onClick={() => scrollToTarget(0)} cursor="Top" ariaLabel="Back to top" className="grid h-24 w-24 place-items-center rounded-full bg-cream text-cobalt transition-colors hover:bg-amber">
+            <Magnetic onClick={() => scrollToTarget(0)} cursor="למעלה" ariaLabel="חזרה למעלה" className="grid h-24 w-24 place-items-center rounded-full bg-cream text-cobalt transition-colors hover:bg-amber">
               <span className="text-2xl">↑</span>
             </Magnetic>
           </div>
@@ -78,7 +78,7 @@ export default function Footer({ content, brand }: { content: SiteContent["foote
             <Mark className="mb-[2vw] hidden h-[10vw] w-[10vw] max-h-40 max-w-40 md:block" stroke="#3d66e0" />
           </div>
           <div className="mt-6 flex flex-col gap-2 border-t border-cream/10 py-6 text-xs text-cream/40 sm:flex-row sm:justify-between">
-            <p>© {brand.name} · Coffee &amp; Bakery on Wheels</p>
+            <p>© {brand.name} · קפה ומאפים על גלגלים</p>
             <p>{content.bottomLine}</p>
           </div>
         </div>
@@ -97,45 +97,46 @@ function Newsletter({ title, body }: { title: string; body: string }) {
     const data = Object.fromEntries(new FormData(form));
     if (!EMAIL_RE.test(String(data.email ?? "").trim())) {
       setState("error");
-      setMessage("That email doesn't look right.");
+      setMessage("כתובת המייל לא נראית תקינה.");
       return;
     }
     setState("sending");
     try {
       const res = await fetch("/api/subscribe", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) });
       const json = await res.json().catch(() => ({}));
-      if (!res.ok) throw new Error(json.error ?? "Something went wrong.");
+      if (!res.ok) throw new Error(json.error ?? "משהו השתבש.");
       form.reset();
       setState("done");
-      setMessage(json.alreadySubscribed ? "You're already on the list — thank you!" : "You're in. See you in your inbox ☕");
+      setMessage(json.alreadySubscribed ? "כבר נרשמת — תודה!" : "נרשמת! נתראה בתיבת המייל ☕");
     } catch (err) {
       setState("error");
-      setMessage(err instanceof Error ? err.message : "Something went wrong.");
+      setMessage(err instanceof Error ? err.message : "משהו השתבש.");
     }
   }
 
   return (
     <form onSubmit={onSubmit} noValidate className="mt-8 max-w-md">
-      <p className="text-xs font-bold uppercase tracking-[0.25em] text-cream/40">{title}</p>
+      <p className="text-xs font-bold uppercase tracking-[0.15em] text-cream/40">{title}</p>
       <p className="mt-2 text-sm text-cream/70">{body}</p>
-      <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+      <div aria-hidden className="pointer-events-none absolute h-0 w-0 overflow-hidden opacity-0">
         <input name="company" tabIndex={-1} autoComplete="off" />
       </div>
       <div className="mt-4 flex rounded-full border border-cream/25 bg-cream/5 p-1 focus-within:border-amber">
         <label htmlFor="nl-email" className="sr-only">
-          Email address
+          כתובת מייל
         </label>
         <input
           id="nl-email"
           name="email"
           type="email"
+          dir="ltr"
           required
           placeholder="you@example.com"
           autoComplete="email"
-          className="min-w-0 flex-1 bg-transparent px-4 text-sm text-cream outline-none placeholder:text-cream/40"
+          className="min-w-0 flex-1 bg-transparent px-4 text-right text-sm text-cream outline-none placeholder:text-cream/40"
         />
         <button disabled={state === "sending"} className="rounded-full bg-cream px-5 py-2.5 text-sm font-bold text-cobalt transition-colors hover:bg-amber disabled:opacity-60">
-          {state === "sending" ? "…" : "Join"}
+          {state === "sending" ? "…" : "הצטרפות"}
         </button>
       </div>
       {message && (

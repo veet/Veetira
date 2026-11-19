@@ -49,7 +49,7 @@ export default function Marquee({ words, className = "" }: { words: string[]; cl
   );
 
   return (
-    <div className={`overflow-hidden whitespace-nowrap ${className}`}>
+    <div dir="ltr" className={`overflow-hidden whitespace-nowrap ${className}`}>
       <div ref={track} className="flex w-max will-change-transform">
         {row(false)}
         {row(true)}

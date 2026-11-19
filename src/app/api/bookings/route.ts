@@ -9,14 +9,14 @@ import { parseBooking } from "@/lib/validation";
 export async function POST(request: Request) {
   const limit = rateLimit(`booking:${clientIp(request.headers)}`, 5, 10 * 60_000);
   if (!limit.ok) {
-    return Response.json({ error: "Too many requests — please try again in a few minutes." }, { status: 429, headers: { "Retry-After": String(limit.retryAfter) } });
+    return Response.json({ error: "יותר מדי בקשות — נסו שוב בעוד כמה דקות." }, { status: 429, headers: { "Retry-After": String(limit.retryAfter) } });
   }
 
   let body: Record<string, unknown>;
   try {
     body = await request.json();
   } catch {
-    return Response.json({ error: "Invalid request." }, { status: 400 });
+    return Response.json({ error: "בקשה לא תקינה." }, { status: 400 });
   }
 
   // Honeypot: real visitors never see or fill this field.
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     // Accept "today" in the visitor's timezone: allow anything from yesterday (UTC) onward.
     today: new Date(Date.now() - 86_400_000).toISOString().slice(0, 10),
   });
-  if (!ok) return Response.json({ error: "Please fix the highlighted fields.", errors }, { status: 422 });
+  if (!ok) return Response.json({ error: "נא לתקן את השדות המסומנים.", errors }, { status: 422 });
 
   const record = { name: input.name, email: input.email, event_date: input.date, guests: input.guests, event_type: input.type, message: input.message };
   const id = createBooking(record);

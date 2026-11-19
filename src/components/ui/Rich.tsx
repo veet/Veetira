@@ -1,11 +1,11 @@
 import { Fragment, type ReactNode } from "react";
 
-/** Renders `*word*` as the italic serif accent. */
+/** Renders `*word*` as the serif accent (upright: Hebrew has no true italic). */
 export function rich(text: string, accentClass = "text-amber"): ReactNode {
   const parts = text.split(/(\*[^*]+\*)/g).filter(Boolean);
   return parts.map((p, i) =>
     p.startsWith("*") && p.endsWith("*") && p.length > 2 ? (
-      <span key={i} className={`font-serif font-normal italic ${accentClass}`}>
+      <span key={i} className={`font-serif font-medium ${accentClass}`}>
         {p.slice(1, -1)}
       </span>
     ) : (

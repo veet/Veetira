@@ -89,7 +89,7 @@ export default function Hero({ content }: { content: SiteContent["hero"] }) {
             />
             <div className="hero-fade mt-8 flex items-stretch gap-0 text-cream/90">
               {content.chips.slice(0, 3).map((c, i) => (
-                <div key={i} className={`flex flex-col items-center gap-2 px-5 first:pl-0 ${i ? "border-l border-cream/25" : ""}`}>
+                <div key={i} className={`flex flex-col items-center gap-2 px-5 first:ps-0 ${i ? "border-s border-cream/25" : ""}`}>
                   <svg viewBox="0 0 24 24" className="h-7 w-7" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                     <path d={chipIcons[i]} />
                   </svg>
@@ -123,12 +123,12 @@ export default function Hero({ content }: { content: SiteContent["hero"] }) {
             <span className="block hero-float absolute bottom-[34%] left-[40%] w-3.5 rotate-90" data-speed="0.6"><Bean className="hero-float-in block w-full" /></span>
           </div>
 
-          <div className="hero-fade order-3 flex flex-col items-start gap-6 md:items-end md:self-center md:text-right">
+          <div className="hero-fade order-3 flex flex-col items-start gap-6 md:items-end md:self-center md:text-end">
             <p className="max-w-xs text-base leading-relaxed text-cream/75">
               {content.intro}
             </p>
             <div className="flex flex-wrap gap-3 md:justify-end">
-              <Magnetic href="#find-us" cursor="Find" className="rounded-full bg-cream px-7 py-4 text-sm font-bold text-cobalt transition-colors hover:bg-amber">
+              <Magnetic href="#find-us" cursor="מצאו" className="rounded-full bg-cream px-7 py-4 text-sm font-bold text-cobalt transition-colors hover:bg-amber">
                 {content.primaryCta}
               </Magnetic>
               <Magnetic href="#menu" className="rounded-full border border-cream/40 px-7 py-4 text-sm font-bold transition-colors hover:bg-cream/10">
@@ -139,8 +139,8 @@ export default function Hero({ content }: { content: SiteContent["hero"] }) {
         </div>
 
         {/* Scroll cue */}
-        <div className="hero-fade absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[10px] uppercase tracking-[0.35em] text-cream/60 md:flex">
-          Scroll
+        <div className="hero-fade absolute bottom-6 left-1/2 hidden -translate-x-1/2 flex-col items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-cream/60 md:flex">
+          גללו
           <span className="relative block h-10 w-px overflow-hidden bg-cream/20">
             <span className="absolute inset-x-0 top-0 h-1/2 animate-[scrollcue_1.8s_ease-in-out_infinite] bg-cream" />
           </span>

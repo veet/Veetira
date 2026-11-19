@@ -8,6 +8,9 @@ import { rich, richLines } from "@/components/ui/Rich";
 import { foodArt } from "@/components/art/Food";
 import SplitReveal from "@/components/ui/SplitReveal";
 
+const TAG_LABEL: Record<string, string> = { Signature: "מנת הבית", Vegan: "טבעוני" };
+const shekel = (n: number) => `₪${Number.isInteger(n) ? n : n.toFixed(2)}`;
+
 function Card({ item, index }: { item: MenuItem; index: number }) {
   const Art = foodArt[item.art];
   const ref = useRef<HTMLElement>(null);
@@ -26,7 +29,7 @@ function Card({ item, index }: { item: MenuItem; index: number }) {
       ref={ref}
       onPointerMove={tilt}
       onPointerLeave={reset}
-      data-cursor="Order"
+      data-cursor="להזמנה"
       className="menu-card group relative flex h-full w-[min(78vw,340px)] shrink-0 flex-col overflow-hidden rounded-[2rem] bg-cream p-6 text-ink [transform-style:preserve-3d] md:w-[340px]"
     >
       <div className="flex items-start justify-between">
@@ -35,9 +38,9 @@ function Card({ item, index }: { item: MenuItem; index: number }) {
           {(item.tag ? [item.tag] : []).map((t) => (
             <span
               key={t}
-              className={`rounded-full px-3 py-1 text-[10px] font-bold uppercase tracking-[0.15em] ${t === "Signature" ? "bg-velvet text-cream" : "bg-foam text-walnut"}`}
+              className={`rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.05em] ${t === "Signature" ? "bg-velvet text-cream" : "bg-foam text-walnut"}`}
             >
-              {t}
+              {TAG_LABEL[t] ?? t}
             </span>
           ))}
         </div>
@@ -48,7 +51,7 @@ function Card({ item, index }: { item: MenuItem; index: number }) {
       <div className="mt-auto">
         <div className="flex items-baseline justify-between gap-4">
           <h3 className="font-display text-2xl font-semibold leading-tight tracking-tight">{item.name}</h3>
-          <span className="font-display text-xl font-semibold text-latte">${item.price.toFixed(2)}</span>
+          <span className="shrink-0 font-display text-xl font-semibold text-latte">{shekel(item.price)}</span>
         </div>
         <p className="mt-2 text-sm leading-relaxed text-ink/60">{item.description}</p>
       </div>
@@ -73,7 +76,7 @@ export default function MenuSection({ content }: { content: SiteContent["menu"] 
         el.style.scrollSnapType = "none";
         const distance = () => el.scrollWidth - window.innerWidth + 64;
         const tween = gsap.to(track.current, {
-          x: () => -distance(),
+          x: () => distance(),
           ease: "none",
           scrollTrigger: {
             trigger: ".menu-pin",
@@ -123,7 +126,7 @@ export default function MenuSection({ content }: { content: SiteContent["menu"] 
               lines={richLines(content.headline)}
             />
           </div>
-          <div role="tablist" aria-label="Menu categories" className="flex w-fit max-w-full gap-1 overflow-x-auto rounded-full bg-cobalt-deep/60 p-1.5 backdrop-blur [scrollbar-width:none]">
+          <div role="tablist" aria-label="קטגוריות בתפריט" className="flex w-fit max-w-full gap-1 overflow-x-auto rounded-full bg-cobalt-deep/60 p-1.5 backdrop-blur [scrollbar-width:none]">
             {menu.map((c) => (
               <button
                 key={c.id}
@@ -143,7 +146,7 @@ export default function MenuSection({ content }: { content: SiteContent["menu"] 
         {/* Desktop: pinned horizontal track. Mobile: swipeable row filtered by tab. */}
         <div
           ref={track}
-          className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:px-8 md:pl-[max(2rem,calc((100vw-1440px)/2+2rem))]"
+          className="flex snap-x snap-mandatory gap-5 overflow-x-auto px-5 pb-2 [scrollbar-width:none] sm:px-8 md:ps-[max(2rem,calc((100vw-1440px)/2+2rem))]"
         >
           {flat.map((item, i) => (
             <div

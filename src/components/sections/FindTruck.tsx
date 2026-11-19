@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import { gsap, MOTION_OK } from "@/lib/motion";
 import type { SiteContent } from "@/lib/content/types";
-import { DAY_NAMES, formatTime, getStatus, useNow } from "@/lib/time";
+import { DAY_SHORT, formatRange, getStatus, useNow } from "@/lib/time";
 import { richLines } from "@/components/ui/Rich";
 import SplitReveal from "@/components/ui/SplitReveal";
 
@@ -69,7 +69,7 @@ export default function FindTruck({ content }: { content: SiteContent["findTruck
           <div className="max-w-sm">
             <div className="inline-flex items-center gap-3 rounded-full bg-cobalt px-4 py-2 text-sm font-medium text-cream">
               <span className={`h-2.5 w-2.5 rounded-full ${status?.isOpen ? "animate-pulse-amber bg-amber" : "bg-cream/40"}`} />
-              {status ? status.label : "Checking today's stop…"}
+              {status ? status.label : "בודקים את התחנה של היום…"}
             </div>
             <p className="mt-4 text-ink/60">
               {content.body}
@@ -79,7 +79,7 @@ export default function FindTruck({ content }: { content: SiteContent["findTruck
 
         <div className="mt-16 grid gap-8 lg:grid-cols-[1.25fr_1fr]">
           {/* Stylized map */}
-          <div className="map-box relative aspect-[5/3] overflow-hidden rounded-[2rem] bg-cobalt" data-cursor="Map">
+          <div className="map-box relative aspect-[5/3] overflow-hidden rounded-[2rem] bg-cobalt" data-cursor="מפה">
             <svg viewBox="0 0 1000 600" className="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice" aria-hidden>
               <defs>
                 <pattern id="grid" width="50" height="50" patternUnits="userSpaceOnUse">
@@ -102,20 +102,20 @@ export default function FindTruck({ content }: { content: SiteContent["findTruck
                   <g key={i} className="map-pin" transform={`translate(${s.x * 10} ${s.y * 6})`}>
                     {isToday && <circle r="34" fill="#f2b65a" opacity="0.25" className="animate-pulse" />}
                     <circle r={isToday ? 16 : 9} fill={isToday ? "#f2b65a" : "#f4eee4"} stroke="#0e1530" strokeWidth="3" />
-                    <text y={isToday ? -26 : -18} textAnchor="middle" fontSize="18" fontWeight="700" fill="#f4eee4" fontFamily="var(--font-satoshi), sans-serif">
-                      {DAY_NAMES[s.day].slice(0, 3).toUpperCase()}
+                    <text y={isToday ? -26 : -18} textAnchor="middle" fontSize="18" fontWeight="700" fill="#f4eee4" fontFamily="var(--font-heebo), sans-serif">
+                      {DAY_SHORT[s.day]}
                     </text>
                   </g>
                 );
               })}
             </svg>
             {current && (
-            <div className="absolute bottom-4 left-4 right-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-cream/95 p-4 backdrop-blur sm:bottom-6 sm:left-6 sm:right-auto sm:max-w-xs">
+            <div className="absolute bottom-4 start-4 end-4 flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-cream/95 p-4 backdrop-blur sm:bottom-6 sm:start-6 sm:end-auto sm:max-w-xs">
               <div>
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cobalt">{now && current?.day === today ? "Today" : "This week"}</p>
+                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-cobalt">{now && current?.day === today ? "היום" : "השבוע"}</p>
                 <p className="font-display text-lg font-semibold leading-tight">{current.location}</p>
                 <p className="text-sm text-ink/60">
-                  {current.area} · {formatTime(current.open)}–{formatTime(current.close)}
+                  {current.area} · {formatRange(current.open, current.close)}
                 </p>
               </div>
             </div>
@@ -133,17 +133,17 @@ export default function FindTruck({ content }: { content: SiteContent["findTruck
                     className={`absolute inset-0 -z-0 origin-bottom bg-cobalt transition-transform duration-500 ease-expo ${isToday ? "scale-y-100" : "scale-y-0 group-hover:scale-y-100"}`}
                   />
                   <div className="relative flex items-center gap-5 transition-colors duration-300 group-hover:text-cream">
-                    <span className="w-10 font-display text-sm font-semibold uppercase opacity-60">{DAY_NAMES[s.day].slice(0, 3)}</span>
+                    <span className="w-10 font-display text-sm font-semibold uppercase opacity-60">{DAY_SHORT[s.day]}</span>
                     <div>
                       <p className="flex items-center gap-2 font-display text-lg font-semibold leading-tight sm:text-xl">
                         {s.location}
-                        {isToday && <span className="rounded-full bg-amber px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ink">Today</span>}
+                        {isToday && <span className="rounded-full bg-amber px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider text-ink">היום</span>}
                       </p>
                       <p className="text-sm opacity-60">{s.area}</p>
                     </div>
                   </div>
                   <span className="relative shrink-0 text-sm font-medium tabular-nums transition-colors duration-300 group-hover:text-cream">
-                    {formatTime(s.open)}–{formatTime(s.close)}
+                    {formatRange(s.open, s.close)}
                   </span>
                 </li>
               );

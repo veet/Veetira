@@ -16,12 +16,12 @@ export function parseBooking(raw: Record<string, unknown>, opts: { minGuests: nu
     message: str("message", 2000),
   };
   const errors: BookingErrors = {};
-  if (input.name.length < 2) errors.name = "Tell us your name.";
-  if (!EMAIL_RE.test(input.email)) errors.email = "That email doesn't look right.";
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(input.date)) errors.date = "Pick a date.";
-  else if (input.date < (opts.today ?? localToday())) errors.date = "Choose a date in the future.";
-  if (!Number.isFinite(input.guests) || input.guests < opts.minGuests) errors.guests = `We cater from ${opts.minGuests} guests.`;
-  else if (input.guests > 10000) errors.guests = "That's a lot of coffee — call us!";
+  if (input.name.length < 2) errors.name = "איך קוראים לך?";
+  if (!EMAIL_RE.test(input.email)) errors.email = "כתובת המייל לא נראית תקינה.";
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(input.date)) errors.date = "בחרו תאריך.";
+  else if (input.date < (opts.today ?? localToday())) errors.date = "בחרו תאריך עתידי.";
+  if (!Number.isFinite(input.guests) || input.guests < opts.minGuests) errors.guests = `אנחנו מגיעים לאירועים מ־${opts.minGuests} אורחים.`;
+  else if (input.guests > 10000) errors.guests = "זה הרבה קפה — תתקשרו אלינו!";
   if (opts.eventTypes.length && !opts.eventTypes.includes(input.type)) input.type = opts.eventTypes[opts.eventTypes.length - 1];
   return { input, errors, ok: Object.keys(errors).length === 0 };
 }

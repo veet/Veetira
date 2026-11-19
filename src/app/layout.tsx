@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
-import { Fredoka, Instrument_Serif } from "next/font/google";
+import { Frank_Ruhl_Libre, Fredoka, Heebo, Instrument_Serif } from "next/font/google";
 import "./globals.css";
 
 const clash = localFont({
@@ -23,11 +23,23 @@ const satoshi = localFont({
   ],
 });
 
-// Hebrew fallback (same family as the logotype) for any Hebrew text set in the UI fonts.
+/* Hebrew site fonts. Display: Fredoka, the logotype's family. Body: Heebo. Accent: Frank Ruhl Libre. */
 const fredoka = Fredoka({
   variable: "--font-hebrew",
-  weight: ["500", "600"],
-  subsets: ["hebrew"],
+  weight: ["500", "600", "700"],
+  subsets: ["hebrew", "latin"],
+});
+
+const heebo = Heebo({
+  variable: "--font-heebo",
+  weight: ["400", "500", "700"],
+  subsets: ["hebrew", "latin"],
+});
+
+const frank = Frank_Ruhl_Libre({
+  variable: "--font-frank",
+  weight: ["500", "700"],
+  subsets: ["hebrew", "latin"],
 });
 
 const instrument = Instrument_Serif({
@@ -47,7 +59,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${clash.variable} ${satoshi.variable} ${instrument.variable} ${fredoka.variable} antialiased`}>
+    <html lang="he" dir="rtl" className={`${clash.variable} ${satoshi.variable} ${instrument.variable} ${fredoka.variable} ${heebo.variable} ${frank.variable} antialiased`}>
       <body className="font-sans">{children}</body>
     </html>
   );

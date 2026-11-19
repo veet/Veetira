@@ -12,7 +12,7 @@ import type { SiteContent } from "@/lib/content/types";
 const field =
   "peer w-full border-b border-cream/30 bg-transparent pb-3 pt-6 text-lg text-cream outline-none transition-colors placeholder:text-transparent focus:border-amber";
 const floatLabel =
-  "pointer-events-none absolute left-0 top-6 text-cream/60 transition-all duration-300 ease-expo peer-focus:top-0 peer-focus:text-xs peer-focus:text-amber peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:text-xs";
+  "pointer-events-none absolute start-0 top-6 text-cream/60 transition-all duration-300 ease-expo peer-focus:top-0 peer-focus:text-xs peer-focus:text-amber peer-[:not(:placeholder-shown)]:top-0 peer-[:not(:placeholder-shown)]:text-xs";
 
 export default function Events({ content }: { content: SiteContent["events"] }) {
   const eventTypes = content.eventTypes.map((t) => t.text).filter(Boolean);
@@ -40,10 +40,10 @@ export default function Events({ content }: { content: SiteContent["events"] }) 
         setSent(true);
       } else {
         if (data.errors) setErrors(data.errors);
-        setFormError(data.error ?? "Something went wrong. Please try again or email us.");
+        setFormError(data.error ?? "משהו השתבש. נסו שוב או כתבו לנו במייל.");
       }
     } catch {
-      setFormError("Couldn't reach the server. Check your connection and try again.");
+      setFormError("אין חיבור לשרת. בדקו את החיבור ונסו שוב.");
     } finally {
       setSending(false);
     }
@@ -94,51 +94,51 @@ export default function Events({ content }: { content: SiteContent["events"] }) 
                 <h3 className="mt-8 font-display text-4xl font-semibold tracking-tight">{rich(content.successTitle)}</h3>
                 <p className="mt-3 max-w-xs text-cream/70">{content.successBody}</p>
                 <button onClick={() => setSent(false)} className="mt-8 text-sm font-bold text-amber underline underline-offset-4">
-                  Send another
+                  שליחת בקשה נוספת
                 </button>
               </motion.div>
             ) : (
               <motion.form key="form" noValidate onSubmit={onSubmit} initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0, y: -20 }} className="grid gap-8">
-                {/* Honeypot for bots — hidden from people and screen readers. */}
-                <div aria-hidden className="absolute -left-[9999px] h-0 w-0 overflow-hidden">
+                {/* Honeypot for bots — hidden from people and screen readers. (No off-screen offset: in RTL that would add sideways scroll.) */}
+                <div aria-hidden className="pointer-events-none absolute h-0 w-0 overflow-hidden opacity-0">
                   <label>
                     Company <input name="company" tabIndex={-1} autoComplete="off" />
                   </label>
                 </div>
                 <div className="grid gap-8 sm:grid-cols-2">
                   <div className="relative">
-                    <input id="name" name="name" placeholder="Name" autoComplete="name" className={field} aria-invalid={!!errors.name} aria-describedby={errors.name ? "name-err" : undefined} />
+                    <input id="name" name="name" placeholder="שם" autoComplete="name" className={field} aria-invalid={!!errors.name} aria-describedby={errors.name ? "name-err" : undefined} />
                     <label htmlFor="name" className={floatLabel}>
-                      Your name
+                      השם שלך
                     </label>
                     {err("name")}
                   </div>
                   <div className="relative">
-                    <input id="email" name="email" type="email" placeholder="Email" autoComplete="email" className={field} aria-invalid={!!errors.email} aria-describedby={errors.email ? "email-err" : undefined} />
+                    <input id="email" name="email" type="email" dir="ltr" placeholder="מייל" autoComplete="email" className={`${field} text-right`} aria-invalid={!!errors.email} aria-describedby={errors.email ? "email-err" : undefined} />
                     <label htmlFor="email" className={floatLabel}>
-                      Email
+                      מייל
                     </label>
                     {err("email")}
                   </div>
                 </div>
                 <div className="grid gap-8 sm:grid-cols-2">
                   <div className="relative">
-                    <input id="date" name="date" type="date" placeholder="Date" className={`${field} [color-scheme:dark]`} aria-invalid={!!errors.date} aria-describedby={errors.date ? "date-err" : undefined} />
-                    <label htmlFor="date" className="pointer-events-none absolute left-0 top-0 text-xs text-cream/60">
-                      Event date
+                    <input id="date" name="date" type="date" placeholder="תאריך" className={`${field} [color-scheme:dark]`} aria-invalid={!!errors.date} aria-describedby={errors.date ? "date-err" : undefined} />
+                    <label htmlFor="date" className="pointer-events-none absolute start-0 top-0 text-xs text-cream/60">
+                      תאריך האירוע
                     </label>
                     {err("date")}
                   </div>
                   <div className="relative">
-                    <input id="guests" name="guests" type="number" min={content.minGuests} placeholder="Guests" className={field} aria-invalid={!!errors.guests} aria-describedby={errors.guests ? "guests-err" : undefined} />
+                    <input id="guests" name="guests" type="number" min={content.minGuests} placeholder="אורחים" className={field} aria-invalid={!!errors.guests} aria-describedby={errors.guests ? "guests-err" : undefined} />
                     <label htmlFor="guests" className={floatLabel}>
-                      Number of guests
+                      מספר אורחים
                     </label>
                     {err("guests")}
                   </div>
                 </div>
                 <fieldset>
-                  <legend className="mb-3 text-xs text-cream/60">Event type</legend>
+                  <legend className="mb-3 text-xs text-cream/60">סוג האירוע</legend>
                   <div className="flex flex-wrap gap-2">
                     {eventTypes.map((t, i) => (
                       <label key={i} className="cursor-pointer">
@@ -151,9 +151,9 @@ export default function Events({ content }: { content: SiteContent["events"] }) 
                   </div>
                 </fieldset>
                 <div className="relative">
-                  <textarea id="message" name="message" rows={3} placeholder="Message" maxLength={2000} className={`${field} resize-none`} />
+                  <textarea id="message" name="message" rows={3} placeholder="הודעה" maxLength={2000} className={`${field} resize-none`} />
                   <label htmlFor="message" className={floatLabel}>
-                    Tell us more (location, timing…)
+                    ספרו לנו עוד (מיקום, שעות…)
                   </label>
                 </div>
                 {formError && (
@@ -162,8 +162,8 @@ export default function Events({ content }: { content: SiteContent["events"] }) 
                   </p>
                 )}
                 <div>
-                  <Magnetic type="submit" cursor="Send" className="rounded-full bg-cream px-8 py-4 text-sm font-bold text-cobalt transition-colors hover:bg-amber">
-                    {sending ? "Sending…" : content.submitLabel}
+                  <Magnetic type="submit" cursor="שליחה" className="rounded-full bg-cream px-8 py-4 text-sm font-bold text-cobalt transition-colors hover:bg-amber">
+                    {sending ? "שולחים…" : content.submitLabel}
                   </Magnetic>
                 </div>
               </motion.form>

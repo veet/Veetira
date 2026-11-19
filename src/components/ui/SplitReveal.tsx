@@ -24,7 +24,7 @@ export default function SplitReveal({ lines, as: Tag = "h2", className = "", lin
       const mm = gsap.matchMedia();
       mm.add(MOTION_OK, () => {
         const inners = ref.current!.querySelectorAll(".line-inner");
-        const from = { yPercent: 110, rotate: 3 };
+        const from = { yPercent: 110, rotate: -3 };
         const to = { yPercent: 0, rotate: 0, duration: 1.2, ease: "expo.out", stagger: 0.09, delay };
 
         if (onIntro) {
@@ -44,7 +44,7 @@ export default function SplitReveal({ lines, as: Tag = "h2", className = "", lin
     <Tag ref={ref} className={className}>
       {lines.map((line, i) => (
         <span key={i} className="line-mask">
-          <span className={`line-inner origin-bottom-left ${lineClassName}`}>{line}</span>
+          <span className={`line-inner origin-bottom-right ${lineClassName}`}>{line}</span>
         </span>
       ))}
     </Tag>

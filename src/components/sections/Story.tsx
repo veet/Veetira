@@ -21,7 +21,7 @@ export default function Story({ content }: { content: SiteContent["story"] }) {
         gsap.utils.toArray<HTMLElement>(".stat-num").forEach((el) => {
           const target = Number(el.dataset.value);
           const obj = { v: ok ? 0 : target };
-          const render = () => (el.textContent = Math.round(obj.v).toLocaleString("en-US"));
+          const render = () => (el.textContent = Math.round(obj.v).toLocaleString("he-IL"));
           render();
           if (!ok) return;
           gsap.to(obj, { v: target, duration: 2.2, ease: "power3.out", onUpdate: render, scrollTrigger: { trigger: el, start: "top 85%" } });
@@ -61,9 +61,10 @@ export default function Story({ content }: { content: SiteContent["story"] }) {
               <div key={i}>
                 <dt className="sr-only">{s.label}</dt>
                 <dd>
-                  <p className="font-display text-5xl font-semibold tracking-tight sm:text-6xl">
+                  {/* "120,000+" stays together left-to-right; Hebrew units like ק״מ keep the normal right-to-left flow. */}
+                  <p dir={/[֐-׿]/.test(s.suffix) ? undefined : "ltr"} className="text-right font-display text-5xl font-semibold tracking-tight sm:text-6xl">
                     <span className="stat-num" data-value={s.value}>
-                      {s.value.toLocaleString("en-US")}
+                      {s.value.toLocaleString("he-IL")}
                     </span>
                     <span className="text-azure">{s.suffix}</span>
                   </p>
@@ -81,24 +82,26 @@ export default function Story({ content }: { content: SiteContent["story"] }) {
               <Cup className="h-40 w-auto sm:h-56" />
               <IcedCup className="h-32 w-auto sm:h-44" />
             </div>
-            <span className="absolute bottom-4 left-5 text-xs font-bold uppercase tracking-[0.2em] text-cream/80">{content.tileBar}</span>
+            <span className="absolute bottom-4 start-5 text-xs font-bold uppercase tracking-[0.1em] text-cream/80">{content.tileBar}</span>
           </div>
           <div className="story-tile relative grid aspect-square place-items-center overflow-hidden rounded-[2rem] bg-amber">
             <Bun className="story-art h-3/5 w-auto" />
-            <span className="absolute bottom-4 left-5 text-xs font-bold uppercase tracking-[0.2em] text-ink/70">{content.tileBakery}</span>
+            <span className="absolute bottom-4 start-5 text-xs font-bold uppercase tracking-[0.1em] text-ink/70">{content.tileBakery}</span>
           </div>
           <div className="story-tile relative grid aspect-square place-items-center overflow-hidden rounded-[2rem] bg-cream text-cobalt">
             <div className="story-art text-center">
               <Mark className="mx-auto h-16 w-16" stroke="#1f3a93" />
-              <p className="mt-3 font-serif text-3xl italic">{content.tileRoasted}</p>
+              <p className="mt-3 font-serif text-3xl font-medium">{content.tileRoasted}</p>
             </div>
           </div>
-          <div className="story-badge absolute -left-6 top-[46%] hidden h-28 w-28 place-items-center rounded-full bg-cream text-cobalt sm:grid">
+          <div className="story-badge absolute -start-6 top-[46%] hidden h-28 w-28 place-items-center rounded-full bg-cream text-cobalt sm:grid">
             <svg viewBox="0 0 100 100" className="absolute inset-0 h-full w-full" aria-hidden>
               <defs>
                 <path id="circ" d="M50 50 m-38 0 a38 38 0 1 1 76 0 a38 38 0 1 1 -76 0" />
               </defs>
-              <text fontSize="10.5" fontWeight="700" letterSpacing="3" fill="currentColor" fontFamily="var(--font-satoshi)">
+              {/* direction="ltr": right-to-left text on a path runs backwards off the circle in browsers.
+                  Letters within each Hebrew word still come out in the right order. */}
+              <text direction="ltr" textLength={234} lengthAdjust="spacing" fontSize="10.5" fontWeight="700" fill="currentColor" fontFamily="var(--font-heebo)">
                 <textPath href="#circ">{content.badge}</textPath>
               </text>
             </svg>

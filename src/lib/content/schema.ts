@@ -98,7 +98,7 @@ export const blockSchemas: BlockSchema[] = [
             fields: [
               { key: "name", label: "Name", type: "text", max: 60 },
               { key: "description", label: "Description", type: "textarea", rows: 2, max: 200 },
-              { key: "price", label: "Price ($)", type: "number", min: 0, max: 1000, step: 0.05 },
+              { key: "price", label: "Price (₪)", type: "number", min: 0, max: 1000, step: 0.5 },
               { key: "tag", label: "Badge", type: "select", options: [{ value: "", label: "None" }, { value: "Signature", label: "Signature" }, { value: "Vegan", label: "Vegan" }] },
               { key: "art", label: "Illustration", type: "select", options: ART },
             ],
@@ -213,7 +213,7 @@ export const blockSchemas: BlockSchema[] = [
     fields: [
       { key: "headline", label: "Headline", type: "textarea", rows: 2, max: 120, help: ACCENT_HELP },
       { key: "hoursTitle", label: "Hours — first line", type: "text", max: 60 },
-      { key: "hoursLine", label: "Hours — second line", type: "text", max: 60 },
+      { key: "hoursLine", label: "Hours — second line", type: "text", max: 60, help: "Use a plain hyphen between times (07:00-14:00); a long dash flips their order in Hebrew." },
       { key: "newsletterTitle", label: "Newsletter title", type: "text", max: 40 },
       { key: "newsletterBody", label: "Newsletter text", type: "textarea", rows: 2, max: 200 },
       { key: "bottomLine", label: "Bottom line", type: "text", max: 80 },
